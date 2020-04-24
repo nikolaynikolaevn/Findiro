@@ -1,4 +1,4 @@
-package com.flamevision.findiro.UserAndGroups;
+package com.flamevision.findiro.UserAndGroup;
 
 import android.os.Bundle;
 

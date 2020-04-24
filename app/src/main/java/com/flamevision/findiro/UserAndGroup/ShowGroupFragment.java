@@ -1,4 +1,4 @@
-package com.flamevision.findiro.UserAndGroups;
+package com.flamevision.findiro.UserAndGroup;
 
 import android.os.Bundle;
 
@@ -15,8 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.flamevision.findiro.R;
-
-import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
