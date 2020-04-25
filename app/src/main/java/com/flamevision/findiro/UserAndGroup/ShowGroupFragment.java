@@ -22,14 +22,16 @@ import com.flamevision.findiro.R;
 public class ShowGroupFragment extends Fragment implements SelectUserFragment.UserReceiver {
 
     private Group group;
+    private SelectUserFragment.UserReceiver userReceiver;
 
     private Button btnAddMember;
     private TextView tvGroupName;
     private TextView tvMemberTitle;
     private FrameLayout flMembers;
 
-    public ShowGroupFragment(@NonNull Group group) {
+    public ShowGroupFragment(SelectUserFragment.UserReceiver userReceiver, @NonNull Group group) {
         this.group = group;
+        this.userReceiver = userReceiver;
     }
 
 
@@ -59,6 +61,8 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
 
     @Override
     public void UserSelected(User user) {
-        //do nothing...
+        if(userReceiver != null){
+            userReceiver.UserSelected(user);
+        }
     }
 }

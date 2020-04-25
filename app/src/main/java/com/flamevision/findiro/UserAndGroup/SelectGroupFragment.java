@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class SelectGroupFragment extends Fragment {
 
     private ListView listView;
 
-    public SelectGroupFragment(@NonNull GroupReceiver groupReceiver, @NonNull List<Group> groups) {
+    public SelectGroupFragment(GroupReceiver groupReceiver, @NonNull List<Group> groups) {
         this.groupReceiver = groupReceiver;
         this.groups = groups;
     }
@@ -46,10 +47,14 @@ public class SelectGroupFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object item = parent.getItemAtPosition(position);
+                Log.d("SELECT GROUP FRAGMENT", "ITEM CLICKED");
                 if(item != null){
-                    if(item instanceof User){
+                    if(item instanceof Group){
                         Group group = (Group) item;
-                        groupReceiver.GroupSelected(group);
+                        Log.d("SELECT GROUP FRAGMENT", "GROUP " + group.getName() + " HAS BEEN SELECTED");
+                        if(groupReceiver != null) {
+                            groupReceiver.GroupSelected(group);
+                        }
                     }
                 }
             }

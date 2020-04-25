@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class SelectUserFragment extends Fragment {
 
     private ListView listView;
 
-    public SelectUserFragment(@NonNull UserReceiver userReceiver, @NonNull List<User> users) {
+    public SelectUserFragment(UserReceiver userReceiver, @NonNull List<User> users) {
         this.userReceiver = userReceiver;
         this.users = users;
     }
@@ -43,10 +44,14 @@ public class SelectUserFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object item = parent.getItemAtPosition(position);
+                Log.d("SELECT USER FRAGMENT", "ITEM CLICKED");
                 if(item != null){
                     if(item instanceof User){
                         User user = (User)item;
-                        userReceiver.UserSelected(user);
+                        Log.d("SELECT USER FRAGMENT", "USER " + user.getName() + " HAS BEEN SELECTED");
+                        if(userReceiver != null) {
+                            userReceiver.UserSelected(user);
+                        }
                     }
                 }
             }
