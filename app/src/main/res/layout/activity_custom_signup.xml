@@ -4,10 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginAndSignup.CustomLoginActivity">
+    tools:context=".LoginAndSignup.CustomSignupActivity">
+
+    <TextView
+        android:id="@+id/customSignupTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Signup screen"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/customLoginLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
@@ -15,50 +26,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customLoginTitle">
+        app:layout_constraintTop_toBottomOf="@+id/customSignupTitle">
 
         <TextView
-            android:id="@+id/customLoginEmailTitle"
+            android:id="@+id/customSignupEmailTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Email:" />
 
         <EditText
-            android:id="@+id/customLoginEmailText"
+            android:id="@+id/customSignupEmailtext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName" />
 
         <TextView
-            android:id="@+id/customLoginPasswordTitle"
+            android:id="@+id/customSignupPasswordTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Password:" />
 
         <EditText
-            android:id="@+id/customLoginPasswordText"
+            android:id="@+id/customSignupPasswordText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/customLoginButton"
+            android:id="@+id/customSignupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login" />
+            android:text="Sign up" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/customLoginTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Login screen"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
