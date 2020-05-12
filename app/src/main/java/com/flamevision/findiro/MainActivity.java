@@ -11,13 +11,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
-import com.flamevision.findiro.UserAndGroup.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -38,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnTestUserAndGroup = findViewById(R.id.MainTestUserAndGroupButton);
+        btnTestUserAndGroup = findViewById(R.id.mainTestUserAndGroupButton);
         btnTestUserAndGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
