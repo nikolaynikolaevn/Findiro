@@ -14,7 +14,8 @@
 
     <string name="home_second">Home Second</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="facebook_app_id">566496764287500</string>
+    <string name="fb_login_protocol_scheme">fb566496764287500</string>
 </resources>

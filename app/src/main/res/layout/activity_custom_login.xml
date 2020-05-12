@@ -43,11 +43,20 @@
             android:ems="10"
             android:inputType="textPersonName" />
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
+
         <Button
             android:id="@+id/customLoginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login" />
+
     </LinearLayout>
 
     <TextView
@@ -61,4 +70,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
