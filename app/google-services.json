@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "894862871539",
+    "firebase_url": "https://findiro.firebaseio.com",
+    "project_id": "findiro",
+    "storage_bucket": "findiro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894862871539:android:0fb1fba37b36fd4a116086",
+        "android_client_info": {
+          "package_name": "com.flamevision.findiro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "894862871539-ebkqqi7a18b6vecvfc0b43d98lk1rtag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFBRmPb65wjZIw13qICeNeeRDRhpEZbhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894862871539-ebkqqi7a18b6vecvfc0b43d98lk1rtag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
