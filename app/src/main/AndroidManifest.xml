@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
@@ -40,6 +41,11 @@
         <activity android:name=".LoginAndSignup.CustomSignupActivity" />
         <activity android:name=".LoginAndSignup.CustomLoginActivity" />
 
+=======
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/title_activity_login"></activity>
+>>>>>>> Stashed changes
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

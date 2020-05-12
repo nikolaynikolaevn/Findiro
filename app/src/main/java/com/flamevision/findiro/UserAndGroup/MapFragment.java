@@ -41,7 +41,8 @@ public class MapFragment extends FragmentActivity implements OnMapReadyCallback{
         setContentView(R.layout.activity_maps);
 
         //initialize the location provider
-       // fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //something wrong
+        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
