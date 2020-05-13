@@ -9,14 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -27,9 +26,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 public class CustomLoginActivity extends AppCompatActivity {
 
@@ -37,7 +37,11 @@ public class CustomLoginActivity extends AppCompatActivity {
 
     private EditText etEmail;
     private EditText etPass;
-    private Button btnLogin;
+    private TextView tvEmail;
+    private TextView tvPass;
+    private Button btnLoginEmail;
+
+    private  String NoPass = "NoPassSetYet1234";
 
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
@@ -49,7 +53,12 @@ public class CustomLoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.customLoginEmailText);
         etPass = findViewById(R.id.customLoginPasswordText);
-        btnLogin = findViewById(R.id.customLoginButton);
+        tvEmail = findViewById(R.id.customLoginEmailTitle);
+        tvPass = findViewById(R.id.customLoginPasswordTitle);
+        btnLoginEmail = findViewById(R.id.customLoginNextButton);
+
+        etPass.setVisibility(View.GONE);
+        tvPass.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -87,10 +96,10 @@ public class CustomLoginActivity extends AppCompatActivity {
             }
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btnLoginEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                loginViaEmail();
             }
         });
         // [END initialize_fblogin]
@@ -134,34 +143,116 @@ public class CustomLoginActivity extends AppCompatActivity {
     }
     // [END auth_with_facebook]
 
-    private void login(){
+    private void signUpViaEmail(){
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
-        boolean error = false;
+        Log.d("Sign up", "Entered email: " + email + ", pass: " + pass);
 
-        if (email.equalsIgnoreCase("")) {
+        boolean error = false;
+        if(pass == NoPass){
+            etPass.setError("This password is not allowed");
+            error = true;
+        }
+        if (email.equalsIgnoreCase("") && etEmail.getVisibility() != View.GONE) {
             etEmail.setError("You must enter your email.");
             error = true;
         }
-        if (pass.equalsIgnoreCase("")) {
+        if (pass.equalsIgnoreCase("") && etPass.getVisibility() != View.GONE) {
             etPass.setError("You must enter your password.");
             error = true;
         }
-        if (!error) {
+        if(error){Log.d("Sign up", "EditText error occurred");}
+        else  {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        //sign up success
+                        Log.d("Sign up", "Sign up success");
+                        setResult(RESULT_OK);
+                        finish();
+                    } else {
+                        //sign up failed
+                        Log.d("Sign up", "Sign up failed due to exception: " + task.getException());
+                        if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                            //password is too weak
+                            Log.d("Sign up", "Sign up failed because of weak password");
+                            etPass.setError("Your password is too weak");
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private void loginViaEmail(){
+        String email = etEmail.getText().toString().trim();
+        String pass = etPass.getText().toString().trim();
+
+        if(etPass.getVisibility() == View.GONE){pass = NoPass;}
+        Log.d("Login", "Entered email: " + email + ", pass: " + pass);
+
+        boolean error = false;
+        if (email.equalsIgnoreCase("") && etEmail.getVisibility() != View.GONE) {
+            etEmail.setError("You must enter your email.");
+            error = true;
+        }
+        if (pass.equalsIgnoreCase("") && etPass.getVisibility() != View.GONE) {
+            etPass.setError("You must enter your password.");
+            error = true;
+        }
+
+        if(error){Log.d("Login", "EditText error occurred");}
+        else  {
+            Log.d("Login", "Trying to login");
             FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        //login succes
+                        //login success
+                        Log.d("Login", "Login success");
                         setResult(RESULT_OK);
+                        finish();
                     }
                     else {
                         //login failed
-                        setResult(RESULT_CANCELED);
+                        Log.d("Login", "Login failed due to exception: " + task.getException());
+                        if(task.getException() instanceof FirebaseAuthInvalidUserException){
+                            //Email does not exists, show sign up screen
+                            Log.d("Login", "Email does not exists, showing sign up screen");
+                            etPass.setVisibility(View.VISIBLE);
+                            etEmail.setVisibility(View.GONE);
+                            tvPass.setVisibility(View.VISIBLE);
+                            tvEmail.setVisibility(View.GONE);
+                            btnLoginEmail.setText("sign up");
+                            btnLoginEmail.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    signUpViaEmail();
+                                }
+                            });
+                        }
+                        else if(task.getException() instanceof FirebaseAuthInvalidCredentialsException){
+                            //email does exists, but wrong password
+                            if(etPass.getVisibility() != View.GONE){
+                                //inform user about wrong password
+                                Log.d("Login", "Wrong password, informing user");
+                                etPass.setError("wrong password");
+                            }
+                            else {
+                                //show login screen
+                                etPass.setVisibility(View.VISIBLE);
+                                etEmail.setVisibility(View.GONE);
+                                tvPass.setVisibility(View.VISIBLE);
+                                tvEmail.setVisibility(View.GONE);
+                                btnLoginEmail.setText("Log in");
+                                Log.d("Login", "Correct email, showing login screen");
+                            }
+                        }
                     }
-                    finish();
                 }
             });
         }

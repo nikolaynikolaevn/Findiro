@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "894862871539-8aqginderkh17hqetpm46ko96pp22dhl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flamevision.findiro",
+            "certificate_hash": "d86801b2f72fdc759404442d8c2fdc8ebe5618f9"
+          }
+        },
+        {
           "client_id": "894862871539-ebkqqi7a18b6vecvfc0b43d98lk1rtag.apps.googleusercontent.com",
           "client_type": 3
         }
