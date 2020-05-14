@@ -19,11 +19,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flamevision.findiro.LiveLocationDemo.SimpleGroup;
-import com.flamevision.findiro.LiveLocationDemo.SimpleGroupUser;
 import com.flamevision.findiro.LiveLocationDemo.SimpleUser;
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
@@ -40,9 +35,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private Button btnTestUserAndGroup;
@@ -54,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager lm;
     private Marker m;
 
-    private String BRICE = "brice2uid";
+    private String BRICE = "brice1uid";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +94,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ValueEventListener groupListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Clear all markers
+                gm.clear();
 
+                // Get all users in the group and loop through them
                 for (DataSnapshot item : dataSnapshot.child("users").getChildren()) {
+                    // Create user from item
                     SimpleUser simpleUser = item.getValue(SimpleUser.class);
-                    System.out.println("============================= " + simpleUser.getUid()    + " ==============================================");
+
+                    LatLng coordinates = coordinates = new LatLng(simpleUser.getLatitude(), simpleUser.getLongitude());
+                    m = gm.addMarker(new MarkerOptions().position(coordinates).title(simpleUser.getUid()));
                 }
 
 //                SimpleGroup simpleGroup = dataSnapshot.getValue(SimpleGroup.class);
