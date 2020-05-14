@@ -25,6 +25,9 @@ public class CustomSignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_signup);
 
+        //THIS ACTIVITY SHOULD NOT BE USED ANYMORE!
+        finish();
+
         etEmail = findViewById(R.id.customSignupEmailtext);
         etPass = findViewById(R.id.customSignupPasswordText);
         btnSignup = findViewById(R.id.customSignupButton);

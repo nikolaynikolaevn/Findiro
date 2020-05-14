@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class CustomLoginActivity extends AppCompatActivity {
 
@@ -37,8 +38,10 @@ public class CustomLoginActivity extends AppCompatActivity {
 
     private EditText etEmail;
     private EditText etPass;
+    private EditText etName;
     private TextView tvEmail;
     private TextView tvPass;
+    private TextView tvName;
     private Button btnLoginEmail;
 
     private  String NoPass = "NoPassSetYet1234";
@@ -53,12 +56,16 @@ public class CustomLoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.customLoginEmailText);
         etPass = findViewById(R.id.customLoginPasswordText);
+        etName = findViewById(R.id.customLoginNameText);
         tvEmail = findViewById(R.id.customLoginEmailTitle);
         tvPass = findViewById(R.id.customLoginPasswordTitle);
+        tvName = findViewById(R.id.customLoginNameTitle);
         btnLoginEmail = findViewById(R.id.customLoginNextButton);
 
         etPass.setVisibility(View.GONE);
         tvPass.setVisibility(View.GONE);
+        etName.setVisibility(View.GONE);
+        tvName.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -146,8 +153,9 @@ public class CustomLoginActivity extends AppCompatActivity {
     private void signUpViaEmail(){
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
+        final String name = etName.getText().toString().trim();
 
-        Log.d("Sign up", "Entered email: " + email + ", pass: " + pass);
+        Log.d("Sign up", "Entered email: " + email + ", pass: " + pass + ", name: " + name);
 
         boolean error = false;
         if(pass == NoPass){
@@ -162,6 +170,10 @@ public class CustomLoginActivity extends AppCompatActivity {
             etPass.setError("You must enter your password.");
             error = true;
         }
+        if (name.equalsIgnoreCase("") && etName.getVisibility() != View.GONE) {
+            etName.setError("You must enter your name.");
+            error = true;
+        }
         if(error){Log.d("Sign up", "EditText error occurred");}
         else  {
             FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -169,10 +181,20 @@ public class CustomLoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        //sign up success
-                        Log.d("Sign up", "Sign up success");
-                        setResult(RESULT_OK);
-                        finish();
+                        //sign up success, now set user name
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if(user != null){
+                            UserProfileChangeRequest.Builder requestBuilder = new UserProfileChangeRequest.Builder();
+                            UserProfileChangeRequest request = requestBuilder.setDisplayName(name).build();
+                            user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Log.d("Sign up", "Sign up success");
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
+                            });
+                        }
                     } else {
                         //sign up failed
                         Log.d("Sign up", "Sign up failed due to exception: " + task.getException());
@@ -227,6 +249,8 @@ public class CustomLoginActivity extends AppCompatActivity {
                             etEmail.setVisibility(View.GONE);
                             tvPass.setVisibility(View.VISIBLE);
                             tvEmail.setVisibility(View.GONE);
+                            tvName.setVisibility(View.VISIBLE);
+                            etName.setVisibility(View.VISIBLE);
                             btnLoginEmail.setText("sign up");
                             btnLoginEmail.setOnClickListener(new View.OnClickListener() {
                                 @Override
