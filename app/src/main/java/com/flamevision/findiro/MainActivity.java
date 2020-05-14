@@ -1,5 +1,6 @@
 package com.flamevision.findiro;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -18,6 +19,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flamevision.findiro.LiveLocationDemo.SimpleGroup;
+import com.flamevision.findiro.LiveLocationDemo.SimpleGroupUser;
+import com.flamevision.findiro.LiveLocationDemo.SimpleUser;
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,22 +34,32 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private Button btnTestUserAndGroup;
     private Button btnTestLoginAndSignUp;
+    private DatabaseReference mDatabase;
+    private DatabaseReference mGroupReference;
 
     private GoogleMap gm;
     LocationManager lm;
     private Marker m;
 
+    private String BRICE = "brice2uid";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
@@ -77,6 +94,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mGroupReference = FirebaseDatabase.getInstance().getReference("groups/groupId");
+
+        ValueEventListener groupListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot item : dataSnapshot.child("users").getChildren()) {
+                    SimpleUser simpleUser = item.getValue(SimpleUser.class);
+                    System.out.println("============================= " + simpleUser.getUid()    + " ==============================================");
+                }
+
+//                SimpleGroup simpleGroup = dataSnapshot.getValue(SimpleGroup.class);
+//                ArrayList<SimpleGroupUser> simpleGroupUsers = simpleGroup.getUsers();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error getting group update");
+            }
+        };
+        mGroupReference.addValueEventListener(groupListener);
     }
 
     @SuppressLint("MissingPermission")
@@ -106,6 +148,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             m.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             gm.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
         }
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUid(BRICE);
+        simpleUser.setLatitude(location.getLatitude());
+        simpleUser.setLongitude(location.getLongitude());
+
+        mDatabase.child("users").child(BRICE).child("location").setValue("Latitude: " + location.getLatitude() + " - Longitude: " + location.getLongitude());
+        mDatabase.child("groups").child("groupId").child("users").child(simpleUser.getUid()).setValue(simpleUser);
     }
 
     @Override
@@ -125,14 +174,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]  grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted by the user
                     lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
-                }
-                else {
+                } else {
                     // permission was denied by the user
                 }
                 return;
