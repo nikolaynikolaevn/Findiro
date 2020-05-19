@@ -10,11 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.flamevision.findiro.R;
-import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
 
 public class TestLoginAndSignupActivity extends AppCompatActivity {
 

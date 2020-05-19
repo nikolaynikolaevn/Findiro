@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -28,9 +27,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class CustomLoginActivity extends AppCompatActivity {
 
@@ -38,13 +35,7 @@ public class CustomLoginActivity extends AppCompatActivity {
 
     private EditText etEmail;
     private EditText etPass;
-    private EditText etName;
-    private TextView tvEmail;
-    private TextView tvPass;
-    private TextView tvName;
     private Button btnLoginEmail;
-
-    private  String NoPass = "NoPassSetYet1234";
 
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
@@ -56,16 +47,8 @@ public class CustomLoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.customLoginEmailText);
         etPass = findViewById(R.id.customLoginPasswordText);
-        etName = findViewById(R.id.customLoginNameText);
-        tvEmail = findViewById(R.id.customLoginEmailTitle);
-        tvPass = findViewById(R.id.customLoginPasswordTitle);
-        tvName = findViewById(R.id.customLoginNameTitle);
-        btnLoginEmail = findViewById(R.id.customLoginNextButton);
+        btnLoginEmail = findViewById(R.id.customLoginButton);
 
-        etPass.setVisibility(View.GONE);
-        tvPass.setVisibility(View.GONE);
-        etName.setVisibility(View.GONE);
-        tvName.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -150,83 +133,28 @@ public class CustomLoginActivity extends AppCompatActivity {
     }
     // [END auth_with_facebook]
 
-    private void signUpViaEmail(){
-        String email = etEmail.getText().toString().trim();
-        String pass = etPass.getText().toString().trim();
-        final String name = etName.getText().toString().trim();
 
-        Log.d("Sign up", "Entered email: " + email + ", pass: " + pass + ", name: " + name);
-
-        boolean error = false;
-        if(pass == NoPass){
-            etPass.setError("This password is not allowed");
-            error = true;
-        }
-        if (email.equalsIgnoreCase("") && etEmail.getVisibility() != View.GONE) {
-            etEmail.setError("You must enter your email.");
-            error = true;
-        }
-        if (pass.equalsIgnoreCase("") && etPass.getVisibility() != View.GONE) {
-            etPass.setError("You must enter your password.");
-            error = true;
-        }
-        if (name.equalsIgnoreCase("") && etName.getVisibility() != View.GONE) {
-            etName.setError("You must enter your name.");
-            error = true;
-        }
-        if(error){Log.d("Sign up", "EditText error occurred");}
-        else  {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        //sign up success, now set user name
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        if(user != null){
-                            UserProfileChangeRequest.Builder requestBuilder = new UserProfileChangeRequest.Builder();
-                            UserProfileChangeRequest request = requestBuilder.setDisplayName(name).build();
-                            user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Log.d("Sign up", "Sign up success");
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
-                            });
-                        }
-                    } else {
-                        //sign up failed
-                        Log.d("Sign up", "Sign up failed due to exception: " + task.getException());
-                        if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
-                            //password is too weak
-                            Log.d("Sign up", "Sign up failed because of weak password");
-                            etPass.setError("Your password is too weak");
-                        }
-                    }
-                }
-            });
-        }
-    }
 
     private void loginViaEmail(){
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
-        if(etPass.getVisibility() == View.GONE){pass = NoPass;}
         Log.d("Login", "Entered email: " + email + ", pass: " + pass);
 
         boolean error = false;
-        if (email.equalsIgnoreCase("") && etEmail.getVisibility() != View.GONE) {
+        if (email.equalsIgnoreCase("")) {
             etEmail.setError("You must enter your email.");
             error = true;
         }
-        if (pass.equalsIgnoreCase("") && etPass.getVisibility() != View.GONE) {
+        if (pass.equalsIgnoreCase("")) {
             etPass.setError("You must enter your password.");
             error = true;
         }
 
-        if(error){Log.d("Login", "EditText error occurred");}
+        if(error){
+            Log.d("Login", "EditText error occurred");
+            Toast.makeText(this, "Log in failed", Toast.LENGTH_SHORT).show();
+        }
         else  {
             Log.d("Login", "Trying to login");
             FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -244,38 +172,13 @@ public class CustomLoginActivity extends AppCompatActivity {
                         Log.d("Login", "Login failed due to exception: " + task.getException());
                         if(task.getException() instanceof FirebaseAuthInvalidUserException){
                             //Email does not exists, show sign up screen
-                            Log.d("Login", "Email does not exists, showing sign up screen");
-                            etPass.setVisibility(View.VISIBLE);
-                            etEmail.setVisibility(View.GONE);
-                            tvPass.setVisibility(View.VISIBLE);
-                            tvEmail.setVisibility(View.GONE);
-                            tvName.setVisibility(View.VISIBLE);
-                            etName.setVisibility(View.VISIBLE);
-                            btnLoginEmail.setText("sign up");
-                            btnLoginEmail.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    signUpViaEmail();
-                                }
-                            });
+                            etEmail.setError("No account exists with this email.");
                         }
                         else if(task.getException() instanceof FirebaseAuthInvalidCredentialsException){
                             //email does exists, but wrong password
-                            if(etPass.getVisibility() != View.GONE){
-                                //inform user about wrong password
-                                Log.d("Login", "Wrong password, informing user");
-                                etPass.setError("wrong password");
-                            }
-                            else {
-                                //show login screen
-                                etPass.setVisibility(View.VISIBLE);
-                                etEmail.setVisibility(View.GONE);
-                                tvPass.setVisibility(View.VISIBLE);
-                                tvEmail.setVisibility(View.GONE);
-                                btnLoginEmail.setText("Log in");
-                                Log.d("Login", "Correct email, showing login screen");
-                            }
+                            etPass.setError("Wrong password.");
                         }
+                        Toast.makeText(CustomLoginActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

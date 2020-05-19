@@ -21,7 +21,11 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +39,20 @@
             android:text="Email:" />
 
         <EditText
-            android:id="@+id/customSignupEmailtext"
+            android:id="@+id/customSignupEmailText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/customSignupNameTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name:" />
+
+        <EditText
+            android:id="@+id/customSignupNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

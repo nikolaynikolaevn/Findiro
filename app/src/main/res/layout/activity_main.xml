@@ -10,7 +10,7 @@
         android:id="@+id/mainTestUserAndGroupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:text="test user and group"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
