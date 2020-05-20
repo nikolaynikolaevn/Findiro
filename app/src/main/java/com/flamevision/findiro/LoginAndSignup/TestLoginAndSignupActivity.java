@@ -110,7 +110,7 @@ public class TestLoginAndSignupActivity extends AppCompatActivity {
 
     private void onLogin(){
         user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/name");
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/" + user.getUid() + "/name");
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

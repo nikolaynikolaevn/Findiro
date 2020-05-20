@@ -45,11 +45,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //THIS CODE SHOULD ADD A NEW CHILD AND SET THE VALUE, BUT IT DOESN'T!
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference childRef = rootRef.child("NewChildName");
-        childRef.setValue("Hello there!");
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);

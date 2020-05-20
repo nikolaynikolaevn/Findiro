@@ -109,14 +109,9 @@ public class CustomSignupActivity extends AppCompatActivity {
     }
     private void updateDatabase(String name){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         DatabaseReference curUserRef = usersRef.child(user.getUid());
         DatabaseReference curUserNameRef = curUserRef.child("name");
         curUserNameRef.setValue(name);
-        DatabaseReference curUserLocRef = curUserRef.child("location");
-        DatabaseReference curUserLatRef = curUserLocRef.child("lat");
-        DatabaseReference curUserLonRef = curUserLocRef.child("long");
-        curUserLatRef.setValue(0);
-        curUserLonRef.setValue(0);
     }
 }
