@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/selectGroupLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/SelectGroupName"
+        android:id="@+id/selectGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/SelectGroupMemberAmount"
+        android:id="@+id/selectGroupMemberAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,10 +28,10 @@
         android:layout_marginTop="8dp"
         android:text="Members:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SelectGroupName" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGroupName" />
 
     <TextView
-        android:id="@+id/SelectGroupCreator"
+        android:id="@+id/selectGroupCreator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -39,6 +39,6 @@
         android:layout_marginTop="8dp"
         android:text="Group Creator:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SelectGroupMemberAmount" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGroupMemberAmount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

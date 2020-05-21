@@ -42,10 +42,10 @@ public class CustomUserListAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.list_item_select_user, parent, false);
         }
 
-        ImageView ivPicture = convertView.findViewById(R.id.SelectUserItemPicture);
-        TextView tvName = convertView.findViewById(R.id.SelectUserItemName);
+        ImageView ivPicture = convertView.findViewById(R.id.selectUserItemPicture);
+        TextView tvName = convertView.findViewById(R.id.selectUserItemName);
 
-        ivPicture.setImageBitmap(users.get(position).getProfilePicture());
+        ivPicture.setImageBitmap(null);
         tvName.setText(users.get(position).getName());
 
         return convertView;

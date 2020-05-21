@@ -11,63 +11,63 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class User {
-    private String name;
-    private Bitmap profilePicture;
-    private boolean hasCorona;
-    private Location location;
-    private String uid;
+import java.util.ArrayList;
+import java.util.List;
 
-    public User(String name, Bitmap profilePicture, boolean hasCorona) {
+public class User {
+    protected String userId;
+    protected String name;
+    protected List<String> groups = new ArrayList<>();
+    protected int longitude;
+    protected int latitude;
+
+    private Location location;
+
+    public User() {
+
+    }
+
+    public User(String userId, String name, List<String> groups, int longitude, int latitude) {
+        this.userId = userId;
         this.name = name;
-        this.profilePicture = profilePicture;
-        this.hasCorona = hasCorona;
-        this.uid = null;
+        this.groups = groups;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public User(String name, Bitmap profilePicture, boolean hasCorona, Location location) {
-        this(name, profilePicture, hasCorona);
+        this(null, name, null, 0, 0);
         this.location = location;
     }
 
-    public User(String uid){
-        this.uid = uid;
-        useUid(uid);
+    @NonNull
+    @Override
+    public String toString() {
+        String holder = "userId: " + userId;
+        holder += "\nname: " + name;
+        holder += "\ngroups:";
+        for(String s: groups){
+            holder += "\n\t • " + s;
+        }
+        holder += "\nlongitude: " + longitude;
+        holder += "\nlatitude: " + latitude;
+        return holder;
     }
-
-    private void useUid(@NonNull String uid){
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/" + uid + "/name");
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null) {
-                    name = dataSnapshot.getValue().toString();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
 
     public String getName() {
         return name;
     }
-
-    public Bitmap getProfilePicture() {
-        return profilePicture;
+    public List<String> getGroups(){
+        return groups;
     }
-
-    public boolean isHasCorona() {
-        return hasCorona;
+    public int getLongitude(){
+        return longitude;
+    }
+    public int getLatitude(){
+        return latitude;
     }
 
     public Location getLocation() { return location; }
     public void setLocation(Location location) { this.location = location; }
 
-    public String getUid() {
-        return uid;
-    }
 }

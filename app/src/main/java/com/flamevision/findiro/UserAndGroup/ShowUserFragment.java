@@ -17,7 +17,7 @@ import com.flamevision.findiro.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShowUserFragment extends Fragment {
+public class ShowUserFragment extends Fragment implements UserReference.UserReferenceUpdate {
 
     private User user;
 
@@ -41,6 +41,10 @@ public class ShowUserFragment extends Fragment {
         tvName = view.findViewById(R.id.ShowUserName);
         ivPicture = view.findViewById(R.id.ShowUserPicture);
 
+        if(user instanceof  UserReference){
+            ((UserReference) user).AddListener(this);
+        }
+
         ShowUser(this.user);
 
         return view;
@@ -49,6 +53,11 @@ public class ShowUserFragment extends Fragment {
     public void ShowUser(@NonNull User user){
         this.user = user;
         tvName.setText(user.getName());
-        ivPicture.setImageBitmap(user.getProfilePicture());
+        ivPicture.setImageBitmap(null);
+    }
+
+    @Override
+    public void UserValuesUpdated(@NonNull User oldUser, @NonNull UserReference newUser) {
+        ShowUser(newUser);
     }
 }

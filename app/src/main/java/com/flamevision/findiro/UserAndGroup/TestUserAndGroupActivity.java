@@ -70,13 +70,13 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
         */
     }
 
-    private void showAllGroups(){
-        groups = new ArrayList<>();
-        groupsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Show all groups" ,"Total groups: "+snapshot.getChildrenCount());
-                for (DataSnapshot groupSnapShot: snapshot.getChildren()) {
+    private ValueEventListener groupValueListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            Log.e("Show all groups" ,"Total groups: "+snapshot.getChildrenCount());
+            for (DataSnapshot groupSnapShot: snapshot.getChildren()) {
+                Group group = new GroupReference(groupSnapShot.getKey(), null);
+                    /*
                     String name = groupSnapShot.child("name").getValue().toString();
                     String groupCreatorUid = groupSnapShot.child("groupCreator").getValue().toString();
                     Log.e("Show all groups" ,"Group name: "+ name);
@@ -91,47 +91,54 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
                         members.add(member);
                     }
                     Group group = new Group(members, groupCreator, name);
-                    groups.add(group);
-                }
-                showGroupsFragment();
+                     */
+                groups.add(group);
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase error", databaseError.getMessage());
-            }
-        });
+            showGroupsFragment();
+        }
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            Log.e("Firebase error", databaseError.getMessage());
+        }
+    };
+    private void showAllGroups(){
+        groups = new ArrayList<>();
+        groupsRef.addValueEventListener(groupValueListener);
     }
 
+    private ValueEventListener userValueListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            Log.e("Show all users " ,"Total users: "+snapshot.getChildrenCount());
+            for (DataSnapshot userSnapShot: snapshot.getChildren()) {
+                if(true){
+                    String userUid = userSnapShot.getKey().toString();
+                    Log.e("Show all users " ,"UserUid: "+ userUid);
+                    User user = new UserReference(userUid, null);
+                    users.add(user);
+                }
+                else { //OLD WAY
+                    String name = userSnapShot.child("name").getValue().toString();
+                    String userId = userSnapShot.getKey().toString();
+                    Log.e("Show all users " ,"UserName: "+ name);
+                    User user = new User(userId, name, null, 0, 0);
+                    users.add(user);
+                }
+            }
+            showUsersFragment();
+        }
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            Log.e("Firebase error", databaseError.getMessage());
+        }
+    };
     private void showAllUsers(){
         users = new ArrayList<>();
-        usersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Show all users " ,"Total users: "+snapshot.getChildrenCount());
-                for (DataSnapshot userSnapShot: snapshot.getChildren()) {
-                    if(false){
-                        String userUid = userSnapShot.getValue().toString();
-                        Log.e("Show all users " ,"UserUid: "+ userUid);
-                        User user = new User(userUid);
-                        users.add(user);
-                    }
-                    else {
-                        String name = userSnapShot.child("name").getValue().toString();
-                        Log.e("Show all users " ,"UserName: "+ name);
-                        User user = new User(name, null, false);
-                        users.add(user);
-                    }
-                }
-                showUsersFragment();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase error", databaseError.getMessage());
-            }
-        });
+        usersRef.addValueEventListener(userValueListener);
     }
 
     private void showUsersFragment(){
+        usersRef.removeEventListener(userValueListener);
         //Add or replace fragment in container
         FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
@@ -140,6 +147,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
         fragTrans.commit();
     }
     private void showGroupsFragment(){
+        groupsRef.removeEventListener(groupValueListener);
         //Add or replace fragment in container
         FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
@@ -147,7 +155,6 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
         fragTrans.replace(R.id.testUserAndGroupFragContainer, fragment, "MyTag");
         fragTrans.commit();
     }
-
 
     @Override
     public void GroupSelected(Group group) {

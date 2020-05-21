@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.flamevision.findiro.R;
+import com.flamevision.findiro.UserAndGroup.User;
+import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class TestLoginAndSignupActivity extends AppCompatActivity {
+public class TestLoginAndSignupActivity extends AppCompatActivity implements UserReference.UserReferenceUpdate {
 
     private Button btnLogin;
     private Button btnSignup;
@@ -27,6 +29,7 @@ public class TestLoginAndSignupActivity extends AppCompatActivity {
     private TextView tvStatus;
 
     private FirebaseUser user;
+    private UserReference userReference;
 
     private int REQUESTCODE_SIGNUP = 123;
     private int REQUESTCODE_LOGIN = 321;
@@ -110,6 +113,8 @@ public class TestLoginAndSignupActivity extends AppCompatActivity {
 
     private void onLogin(){
         user = FirebaseAuth.getInstance().getCurrentUser();
+        userReference = new UserReference(user.getUid(), this);
+        /*
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/" + user.getUid() + "/name");
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -122,21 +127,25 @@ public class TestLoginAndSignupActivity extends AppCompatActivity {
 
             }
         });
+         */
 
     }
-    private void onLoginStatusUpdate(String userName){
-        String status = "You are logged in";
-        status += "\nuser DisplayName: " + user.getDisplayName();
-        status += "\nuser DatabaseName: " + userName;
-        status += "\nuser email: " + user.getEmail();
+    private void onLoginStatusUpdate(){
+        String status = userReference.toString();
+        status += "\nemail: " + user.getEmail();
         tvStatus.setText(status);
     }
 
     private  void onLogout(){
         user = null;
+        userReference = null;
         FirebaseAuth.getInstance().signOut();
         tvStatus.setText("You are NOT logged in");
     }
 
 
+    @Override
+    public void UserValuesUpdated(@NonNull User oldUser, @NonNull UserReference newUser) {
+        onLoginStatusUpdate();
+    }
 }

@@ -41,13 +41,13 @@ public class CustomGroupListAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.list_item_select_group, parent, false);
         }
 
-        TextView tvName = convertView.findViewById(R.id.SelectGroupName);
-        TextView tvMembers = convertView.findViewById(R.id.SelectGroupMemberAmount);
-        TextView tvCreator = convertView.findViewById(R.id.SelectGroupCreator);
+        TextView tvName = convertView.findViewById(R.id.selectGroupName);
+        TextView tvMembers = convertView.findViewById(R.id.selectGroupMemberAmount);
+        TextView tvCreator = convertView.findViewById(R.id.selectGroupCreator);
 
         tvName.setText(groups.get(position).getName());
         tvMembers.setText("Members: " + groups.get(position).getMembers().size());
-        tvCreator.setText("Group Creator: " + groups.get(position).getGroupCreator().getName());
+        tvCreator.setText("Group Creator: " + groups.get(position).getGroupCreator());
 
         return convertView;
     }

@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +30,7 @@ public class SelectGroupFragment extends Fragment {
     private List<Group> groups;
     private  GroupReceiver groupReceiver;
 
-    private ListView listView;
+    private RecyclerView recyclerView;
 
     public SelectGroupFragment(GroupReceiver groupReceiver, @NonNull List<Group> groups) {
         this.groupReceiver = groupReceiver;
@@ -41,6 +43,12 @@ public class SelectGroupFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_group, container, false);
 
+        recyclerView = view.findViewById(R.id.selectGroupRecyclerView);
+        GroupRecyclerAdapter groupRecyclerAdapter = new GroupRecyclerAdapter(getContext(), groups, groupReceiver);
+        recyclerView.setAdapter(groupRecyclerAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        /*
         listView = view.findViewById(R.id.SelectGroupListView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -61,6 +69,8 @@ public class SelectGroupFragment extends Fragment {
         });
 
         listView.setAdapter(new CustomGroupListAdapter(getContext(), groups));
+
+         */
 
         return view;
     }
