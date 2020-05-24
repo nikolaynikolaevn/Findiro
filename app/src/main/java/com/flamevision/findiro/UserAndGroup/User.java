@@ -18,14 +18,14 @@ public class User {
     protected String userId;
     protected String name;
     protected List<String> groups = new ArrayList<>();
-    protected int longitude;
-    protected int latitude;
+    protected double longitude;
+    protected double latitude;
 
     public User() {
 
     }
 
-    public User(String userId, String name, List<String> groups, int longitude, int latitude) {
+    public User(String userId, String name, List<String> groups, double longitude, double latitude) {
         this.userId = userId;
         this.name = name;
         this.groups = groups;
@@ -53,10 +53,10 @@ public class User {
     public List<String> getGroups(){
         return groups;
     }
-    public int getLongitude(){
+    public double getLongitude(){
         return longitude;
     }
-    public int getLatitude(){
+    public double getLatitude(){
         return latitude;
     }
 }

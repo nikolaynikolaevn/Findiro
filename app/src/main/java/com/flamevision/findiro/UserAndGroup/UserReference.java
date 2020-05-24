@@ -81,12 +81,12 @@ public class UserReference extends User {
 
         Object oLong = dataSnapshot.child("location").child("long").getValue();
         if(oLong != null){
-            longitude = (int)oLong;
+            longitude = (double)oLong;
         }
 
         Object oLat = dataSnapshot.child("location").child("lat").getValue();
         if(oLat != null){
-            latitude = (int)oLat;
+            latitude = (double)oLat;
         }
 
         if(printUpdate){printUser();}
