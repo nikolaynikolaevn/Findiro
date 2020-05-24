@@ -21,8 +21,6 @@ public class User {
     protected int longitude;
     protected int latitude;
 
-    private Location location;
-
     public User() {
 
     }
@@ -33,11 +31,6 @@ public class User {
         this.groups = groups;
         this.longitude = longitude;
         this.latitude = latitude;
-    }
-
-    public User(String name, Bitmap profilePicture, boolean hasCorona, Location location) {
-        this(null, name, null, 0, 0);
-        this.location = location;
     }
 
     @NonNull
@@ -66,8 +59,4 @@ public class User {
     public int getLatitude(){
         return latitude;
     }
-
-    public Location getLocation() { return location; }
-    public void setLocation(Location location) { this.location = location; }
-
 }
