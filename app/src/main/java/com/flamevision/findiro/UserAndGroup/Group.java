@@ -46,4 +46,6 @@ public class Group {
     public String getName() {
         return name;
     }
+
+    public String getGroupId(){return  groupId;}
 }

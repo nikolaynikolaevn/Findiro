@@ -47,6 +47,9 @@ public class User {
         return holder;
     }
 
+    public String getUserId() {
+        return userId;
+    }
     public String getName() {
         return name;
     }
