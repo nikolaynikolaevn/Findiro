@@ -27,7 +27,7 @@ public class UserTest {
     public void CreateUserWithData(){
         User user = new User(userId, name, groups, longitude, latitude);
         assert(user.getUserId()).equals(userId);
-        assert(user.getGroups()).equals(groups);
+        assert(user.getGroupIds()).equals(groups);
         assert(user.getName()).equals(name);
         assertEquals(user.getLongitude(), longitude, epsilon);
         assertEquals(user.getLatitude(), latitude, epsilon);

@@ -1,5 +1,6 @@
 package com.flamevision.findiro.UserAndGroup;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,7 +54,13 @@ public class ShowUserFragment extends Fragment implements UserReference.UserRefe
     public void ShowUser(@NonNull User user){
         this.user = user;
         tvName.setText(user.getName());
-        ivPicture.setImageBitmap(null);
+        if(user.picturePath == null){
+            Drawable defaultPic = getResources().getDrawable(R.drawable.ic_user);
+            ivPicture.setImageDrawable(defaultPic);
+        }
+        else {
+            ivPicture.setImageBitmap(user.picture);
+        }
     }
 
     @Override

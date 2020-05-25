@@ -50,8 +50,11 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
             if(group != null){
                 Log.e(log, "Group has been set: " + group.name);
                 this.group = group;
+                tvName.setText("Loading name...");
+                tvMembers.setText("Loading members...");
+                tvGroupCreator.setText("Loading group creator...");
                 if(group.groupCreator != null){
-                    groupCreatorUser = new UserReference(group.groupCreator, this);
+                    groupCreatorUser = new UserReference(group.groupCreator, this, false);
                 }
                 if(group instanceof GroupReference){
                     ((GroupReference) group).AddListener(this);
@@ -69,6 +72,8 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
                 groupCreatorUser.RemoveListener(this);
                 tvGroupCreator.setText("");
             }
+            group = null;
+            groupCreatorUser = null;
         }
 
         private void showGroup(){
@@ -78,6 +83,9 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
 
         @Override
         public void GroupValuesUpdated(@NonNull Group oldGroup, @NonNull GroupReference newGroup) {
+            if(group.groupCreator != null && groupCreatorUser == null){
+                groupCreatorUser = new UserReference(group.groupCreator, this, false);
+            }
             showGroup();
         }
 

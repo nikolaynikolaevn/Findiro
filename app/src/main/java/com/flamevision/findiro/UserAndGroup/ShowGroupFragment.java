@@ -58,7 +58,7 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
             if(((GroupReference) group).isUpdatedOnce()){
                 members = new ArrayList<>();
                 for (String s : group.members) {
-                    UserReference userReference = new UserReference(s, null);
+                    UserReference userReference = new UserReference(s, null, true);
                     members.add(userReference);
                 }
             }
@@ -67,7 +67,7 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         else {
             members = new ArrayList<>();
             for (String s : group.members) {
-                UserReference userReference = new UserReference(s, null);
+                UserReference userReference = new UserReference(s, null, true);
                 members.add(userReference);
             }
         }
@@ -95,7 +95,7 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         if(oldGroup.members.size() != newGroup.members.size()) {
             members = new ArrayList<>();
             for (String s : newGroup.members) {
-                UserReference userReference = new UserReference(s, null);
+                UserReference userReference = new UserReference(s, null, true);
                 members.add(userReference);
             }
         }

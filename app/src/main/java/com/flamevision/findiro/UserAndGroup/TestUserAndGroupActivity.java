@@ -103,7 +103,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
     };
     private void showAllGroups(){
         groups = new ArrayList<>();
-        groupsRef.addValueEventListener(groupValueListener);
+        groupsRef.addListenerForSingleValueEvent(groupValueListener);
     }
 
     private ValueEventListener userValueListener = new ValueEventListener() {
@@ -114,14 +114,14 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
                 if(true){
                     String userUid = userSnapShot.getKey().toString();
                     Log.e("Show all users " ,"UserUid: "+ userUid);
-                    User user = new UserReference(userUid, null);
+                    User user = new UserReference(userUid, null, true);
                     users.add(user);
                 }
                 else { //OLD WAY
                     String name = userSnapShot.child("name").getValue().toString();
                     String userId = userSnapShot.getKey().toString();
                     Log.e("Show all users " ,"UserName: "+ name);
-                    User user = new User(userId, name, null, 0, 0);
+                    User user = new User(userId, name, null, new Double(0), new Double(0), null, null);
                     users.add(user);
                 }
             }
@@ -134,11 +134,11 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
     };
     private void showAllUsers(){
         users = new ArrayList<>();
-        usersRef.addValueEventListener(userValueListener);
+        usersRef.addListenerForSingleValueEvent(userValueListener);
     }
 
     private void showUsersFragment(){
-        usersRef.removeEventListener(userValueListener);
+        //usersRef.removeEventListener(userValueListener);
         //Add or replace fragment in container
         FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
@@ -147,7 +147,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
         fragTrans.commit();
     }
     private void showGroupsFragment(){
-        groupsRef.removeEventListener(groupValueListener);
+        //groupsRef.removeEventListener(groupValueListener);
         //Add or replace fragment in container
         FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();

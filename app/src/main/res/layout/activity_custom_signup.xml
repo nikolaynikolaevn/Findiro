@@ -32,6 +32,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customSignupTitle">
 
+        <ImageView
+            android:id="@+id/customSignupPicture"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:srcCompat="@drawable/ic_edit" />
+
         <TextView
             android:id="@+id/customSignupEmailTitle"
             android:layout_width="match_parent"
@@ -72,9 +78,17 @@
             android:inputType="textPassword" />
 
         <Button
+            android:id="@+id/customSignupPictureButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="choose profile picture" />
+
+        <Button
             android:id="@+id/customSignupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:text="Sign up" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

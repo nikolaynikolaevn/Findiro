@@ -3,15 +3,22 @@ package com.flamevision.findiro.LoginAndSignup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.flamevision.findiro.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +28,9 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class CustomSignupActivity extends AppCompatActivity {
 
@@ -28,6 +38,12 @@ public class CustomSignupActivity extends AppCompatActivity {
     private EditText etPass;
     private EditText etName;
     private Button btnSignup;
+    private Button btnChoosePicture;
+    private ImageView ivPicture;
+
+    private  static final int REQUESTCODE_GET_PICTURE = 123;
+
+    private Uri pictureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +54,8 @@ public class CustomSignupActivity extends AppCompatActivity {
         etPass = findViewById(R.id.customSignupPasswordText);
         etName = findViewById(R.id.customSignupNameText);
         btnSignup = findViewById(R.id.customSignupButton);
+        btnChoosePicture = findViewById(R.id.customSignupPictureButton);
+        ivPicture = findViewById(R.id.customSignupPicture);
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +63,26 @@ public class CustomSignupActivity extends AppCompatActivity {
                 signUpViaEmail();
             }
         });
+        btnChoosePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(gallery, REQUESTCODE_GET_PICTURE);
+            }
+        });
+
+        //show default picture
+        Drawable defaultPic = getResources().getDrawable(R.drawable.ic_user);
+        ivPicture.setImageDrawable(defaultPic);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUESTCODE_GET_PICTURE){
+            pictureUri = data.getData();
+            ivPicture.setImageURI(pictureUri);
+        }
     }
 
     private void signUpViaEmail(){
@@ -81,8 +119,6 @@ public class CustomSignupActivity extends AppCompatActivity {
                         //sign up success, now create user data in the database
                         updateDatabase(name);
                         Log.d("Sign up", "Database updated with new user");
-                        setResult(RESULT_OK);
-                        finish();
                     } else {
                         //sign up failed
                         Log.d("Sign up", "Sign up failed due to exception: " + task.getException());
@@ -109,9 +145,35 @@ public class CustomSignupActivity extends AppCompatActivity {
     }
     private void updateDatabase(String name){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        DatabaseReference curUserRef = usersRef.child(user.getUid());
+        final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        final DatabaseReference curUserRef = usersRef.child(user.getUid());
         DatabaseReference curUserNameRef = curUserRef.child("name");
         curUserNameRef.setValue(name);
+
+        //upload picture
+        if(pictureUri != null){
+            final StorageReference picRef = FirebaseStorage.getInstance().getReference("Profile-Pictures/" + user.getUid());
+            picRef.putFile(pictureUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    String pictureUrl = picRef.getPath();
+                    curUserRef.child("picture").setValue(pictureUrl);
+                    Log.d("Sign up", "Picture has been uploaded to storage");
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Sign up", "Picture failed to upload to storage");
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+        }
+        else {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 }

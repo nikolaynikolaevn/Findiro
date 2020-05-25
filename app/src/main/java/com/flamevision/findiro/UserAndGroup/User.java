@@ -1,15 +1,8 @@
 package com.flamevision.findiro.UserAndGroup;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 
 import androidx.annotation.NonNull;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +10,25 @@ import java.util.List;
 public class User {
     protected String userId;
     protected String name;
-    protected List<String> groups = new ArrayList<>();
-    protected double longitude;
-    protected double latitude;
+    protected List<String> groupIds = new ArrayList<>();
+    protected Double longitude;
+    protected Double latitude;
+    protected String picturePath;
+
+    protected Bitmap picture;
 
     public User() {
 
     }
 
-    public User(String userId, String name, List<String> groups, double longitude, double latitude) {
+    public User(String userId, String name, List<String> groupIds, Double longitude, Double latitude, String pictureUrl, Bitmap picture) {
         this.userId = userId;
         this.name = name;
-        this.groups = groups;
+        this.groupIds = groupIds;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.picturePath = pictureUrl;
+        this.picture = picture;
     }
 
     @NonNull
@@ -38,8 +36,10 @@ public class User {
     public String toString() {
         String holder = "userId: " + userId;
         holder += "\nname: " + name;
+        holder += "\npicturePath: " + picturePath;
+        holder += "\npicture: " + picture;
         holder += "\ngroups:";
-        for(String s: groups){
+        for(String s: groupIds){
             holder += "\n\t • " + s;
         }
         holder += "\nlongitude: " + longitude;
@@ -53,13 +53,19 @@ public class User {
     public String getName() {
         return name;
     }
-    public List<String> getGroups(){
-        return groups;
+    public List<String> getGroupIds(){
+        return groupIds;
     }
-    public double getLongitude(){
+    public Double getLongitude(){
         return longitude;
     }
-    public double getLatitude(){
+    public Double getLatitude(){
         return latitude;
+    }
+    public String getPicturePath() {
+        return picturePath;
+    }
+    public Bitmap getPicture() {
+        return picture;
     }
 }

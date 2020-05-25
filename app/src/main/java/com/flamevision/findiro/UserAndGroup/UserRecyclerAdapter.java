@@ -1,6 +1,8 @@
 package com.flamevision.findiro.UserAndGroup;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flamevision.findiro.R;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +70,13 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
         private void showUser(){
             tvName.setText(user.name);
+            if(user.picture == null){
+                Drawable defaultPic = context.getResources().getDrawable(R.drawable.ic_user);
+                ivPicture.setImageDrawable(defaultPic);
+            }
+            else {
+                ivPicture.setImageBitmap(user.picture);
+            }
         }
 
         @Override

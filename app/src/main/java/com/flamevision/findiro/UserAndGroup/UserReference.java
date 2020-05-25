@@ -1,16 +1,22 @@
 package com.flamevision.findiro.UserAndGroup;
 
+import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +29,20 @@ public class UserReference extends User {
 
     private boolean updatedOnce;
     private boolean updateErrorOccurred;
+    private boolean autoDownloadPicture;
 
     private DatabaseReference userRef;
 
     private static  final  String log = "UserReference";
     private  static  boolean printUpdate = true;
 
-    public UserReference(@NonNull String userId, UserReferenceUpdate listener)
+    public UserReference(@NonNull String userId, UserReferenceUpdate listener, boolean autoDownloadPicture)
     {
         super();
         this.userId = userId;
         this.updatedOnce = false;
         this.updateErrorOccurred = false;
+        this.autoDownloadPicture = autoDownloadPicture;
         if(listener != null){AddListener(listener);}
         setupReference();
     }
@@ -71,11 +79,11 @@ public class UserReference extends User {
             name = oName.toString();
         }
 
-        groups = new ArrayList<>();
+        groupIds = new ArrayList<>();
         for(DataSnapshot groupIdSnapShot : dataSnapshot.child("groups").getChildren()){
             Object oGroupId = groupIdSnapShot.getValue();
             if(oGroupId != null){
-                groups.add(oGroupId.toString());
+                groupIds.add(oGroupId.toString());
             }
         }
 
@@ -89,14 +97,53 @@ public class UserReference extends User {
             latitude = (double)oLat;
         }
 
+        Object oPicture = dataSnapshot.child("picture").getValue();
+        if(oPicture != null){
+            picturePath = oPicture.toString();
+        }
+
         if(printUpdate){printUser();}
         updateAllListeners(oldUser);
+
+        //if picturePath updated, download picture
+        if(autoDownloadPicture && oldUser.picturePath != this.picturePath && this.picturePath != null) {
+            updatePicture();
+        }
     }
+    private void updatePicture(){
+        if(picturePath != null) {
+            final User oldUserBeforePic = GetCurrentUser();
+            try {
+                final File file = File.createTempFile("userProfilePicture", "jpg");
+                StorageReference picRef = FirebaseStorage.getInstance().getReference(picturePath);
+                picRef.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        picture = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+                        if (printUpdate) {
+                            printUser();
+                        }
+                        updateAllListeners(oldUserBeforePic);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void SetAutoDownloadPicture(boolean enabled){
+        autoDownloadPicture = enabled;
+        if(enabled){
+           updatePicture();
+        }
+    }
+
     public User GetCurrentUser(){
         List<String> tempGroups = new ArrayList<>();
-        for(String s: groups){tempGroups.add(s);}
-        User temp = new User(userId, name, tempGroups, longitude, latitude);
-        return  temp;
+        for(String s: groupIds){tempGroups.add(s);}
+        User temp = new User(userId, name, tempGroups, longitude, latitude, picturePath, picture);
+        return temp;
     }
     private void updateAllListeners(@NonNull User oldUser){
         for(UserReferenceUpdate listener : listeners){
