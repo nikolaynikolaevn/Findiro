@@ -21,13 +21,13 @@ public class User {
 
     }
 
-    public User(String userId, String name, List<String> groupIds, Double longitude, Double latitude, String pictureUrl, Bitmap picture) {
+    public User(String userId, String name, List<String> groupIds, Double longitude, Double latitude, String picturePath, Bitmap picture) {
         this.userId = userId;
         this.name = name;
         this.groupIds = groupIds;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.picturePath = pictureUrl;
+        this.picturePath = picturePath;
         this.picture = picture;
     }
 

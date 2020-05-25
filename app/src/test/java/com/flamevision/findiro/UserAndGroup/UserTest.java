@@ -11,6 +11,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class UserTest {
     String userId = "12345";
+    String picturePath = "pf/myPic12345";
     String name = "Henk";
     double longitude = 12.3543;
     double latitude = 42.123;
@@ -25,20 +26,22 @@ public class UserTest {
 
     @Test
     public void CreateUserWithData(){
-        User user = new User(userId, name, groups, longitude, latitude);
+        User user = new User(userId, name, groups, longitude, latitude, picturePath, null);
         assert(user.getUserId()).equals(userId);
         assert(user.getGroupIds()).equals(groups);
         assert(user.getName()).equals(name);
+        assert(user.getPicturePath()).equals(picturePath);
         assertEquals(user.getLongitude(), longitude, epsilon);
         assertEquals(user.getLatitude(), latitude, epsilon);
     }
 
     @Test
     public void ToStringContainsUserFields(){
-        User user = new User(userId, name, groups, longitude, latitude);
+        User user = new User(userId, name, groups, longitude, latitude, picturePath, null);
         String result = user.toString();
         assert(result).contains(userId);
         assert(result).contains(name);
+        assert(result).contains(picturePath);
         assert(result).contains("" + longitude);
         assert(result).contains("" + latitude);
     }

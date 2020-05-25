@@ -24,14 +24,14 @@ public class UserReferenceTest {
 
     @Test
     public void CreateUserReference(){
-        UserReference userReference = new UserReference(userId, null);
+        UserReference userReference = new UserReference(userId, null, false);
         assert(userReference.getUserId()).equals(userId);
         assertFalse (userReference.isUpdateErrorOccurred());
     }
 
     @Test
     public void GetCurrentUser(){
-        UserReference userReference = new UserReference(userId, null);
+        UserReference userReference = new UserReference(userId, null, false);
         User user = userReference.GetCurrentUser();
         assert (user.getUserId()).equals(userId);
     }
