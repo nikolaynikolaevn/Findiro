@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
+import com.flamevision.findiro.Profile.Login2_activity;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,15 +28,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private Button btnTestUserAndGroup;
     private Button btnTestLoginAndSignUp;
+
+    //try new log in UI
+    private Button btnTestTheo;
 
     private GoogleMap gm;
     LocationManager lm;
@@ -66,6 +66,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TestLoginAndSignupActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnTestTheo=findViewById(R.id.TestTheo);
+        btnTestTheo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Login2_activity.class);
                 startActivity(intent);
             }
         });

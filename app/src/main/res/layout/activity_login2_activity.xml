@@ -10,12 +10,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
-            android:layout_weight="4"
-            android:src="@drawable/ic_login"
-            android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_login" />
+
         <View
             android:layout_weight="1"
             android:layout_width="match_parent"
@@ -39,36 +41,41 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:textColor="#fff"
-            android:textColorHint="#eee"
-            android:paddingStart="10dp"
-            android:paddingLeft="10dp"
-            android:hint="Email"
-            android:layout_margin="20dp"
+            android:id="@+id/EmailValue"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            android:layout_margin="20dp"
             android:background="@drawable/rounded_corner"
-            android:textSize="17sp" />
-        <EditText
-            android:textColor="#fff"
-            android:textColorHint="#eee"
+            android:hint="Email"
             android:paddingStart="10dp"
             android:paddingLeft="10dp"
+            android:textColor="#fff"
+            android:textColorHint="#eee"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/PassValue"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_margin="20dp"
+            android:background="@drawable/rounded_corner"
             android:hint="Password"
             android:inputType="textPassword"
-            android:layout_margin="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@drawable/rounded_corner"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="#fff"
+            android:textColorHint="#eee"
             android:textSize="17sp" />
+
         <Button
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:background="@drawable/round_corner_buttom"
-            android:text="sign in"
-            android:textColor="#777"
+            android:id="@+id/btnSignValue"
             android:layout_width="wrap_content"
-            android:layout_height="35dp" />
+            android:layout_height="35dp"
+            android:background="@drawable/round_corner_buttom"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="sign in"
+            android:textColor="#777" />
         <TextView
             android:layout_marginTop="20dp"
             android:textColor="#fff"
@@ -106,11 +113,13 @@
                 android:background="@drawable/google"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
+
             <ImageButton
-                android:layout_marginRight="15dp"
-                android:background="@drawable/facebook_box"
+                android:id="@+id/ibFaceBook"
                 android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/facebook_box" />
             <ImageButton
                 android:background="@drawable/twitter"
                 android:layout_width="40dp"
