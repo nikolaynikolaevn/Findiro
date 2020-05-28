@@ -68,11 +68,13 @@ public class GroupReference extends Group {
         if(oName != null){
             name = oName.toString();
         }
+        else {name = null;}
 
         Object oGroupCreator = dataSnapshot.child("groupCreator").getValue();
         if(oGroupCreator != null){
             groupCreator = oGroupCreator.toString();
         }
+        else {groupCreator = null;}
 
         members = new ArrayList<>();
         for(DataSnapshot groupIdSnapShot : dataSnapshot.child("members").getChildren()){
@@ -81,6 +83,7 @@ public class GroupReference extends Group {
                 members.add(oMemberId.toString());
             }
         }
+
         if(printUpdate){printGroup();}
         updateAllListeners(oldGroup);
     }
