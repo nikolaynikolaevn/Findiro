@@ -19,6 +19,8 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.flamevision.findiro.LoginAndSignup.CustomLoginActivity;
+import com.flamevision.findiro.LoginAndSignup.CustomSignupActivity;
+import com.flamevision.findiro.MainActivity;
 import com.flamevision.findiro.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +39,8 @@ public class Login2_activity extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPass;
     private Button btnLoginEmail;
+
+    private Button signup;
 
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
@@ -66,7 +70,18 @@ public class Login2_activity extends AppCompatActivity {
                 loginViaEmail();
             }
         });
+
+        signup=findViewById(R.id.btnSignUpValue);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login2_activity.this, CustomSignupActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
+
 
     // [START on_start_check_user]
     @Override

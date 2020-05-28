@@ -20,6 +20,7 @@ import android.widget.Button;
 
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.Profile.Login2_activity;
+import com.flamevision.findiro.Profile.Profile_activity;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //try new log in UI
     private Button btnTestTheo;
+
+    //profile
+    private Button btnProfile;
 
     private GoogleMap gm;
     LocationManager lm;
@@ -70,11 +74,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        btnTestTheo=findViewById(R.id.TestTheo);
+        //open new sign in
+        btnTestTheo=findViewById(R.id.TestTheoSignin);
         btnTestTheo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Login2_activity.class);
+                startActivity(intent);
+            }
+        });
+
+        //open profile
+        btnProfile=findViewById(R.id.ProfileTest);
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Profile_activity.class);
                 startActivity(intent);
             }
         });
