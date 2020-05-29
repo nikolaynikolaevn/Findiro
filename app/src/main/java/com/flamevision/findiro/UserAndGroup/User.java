@@ -14,6 +14,7 @@ public class User {
     protected Double longitude;
     protected Double latitude;
     protected String picturePath;
+    protected Boolean online;
 
     protected Bitmap picture;
 
@@ -21,7 +22,7 @@ public class User {
 
     }
 
-    public User(String userId, String name, List<String> groupIds, Double longitude, Double latitude, String picturePath, Bitmap picture) {
+    public User(String userId, String name, List<String> groupIds, Double longitude, Double latitude, String picturePath, Bitmap picture, Boolean online) {
         this.userId = userId;
         this.name = name;
         this.groupIds = groupIds;
@@ -29,6 +30,7 @@ public class User {
         this.latitude = latitude;
         this.picturePath = picturePath;
         this.picture = picture;
+        this.online = online;
     }
 
     @NonNull
@@ -44,6 +46,7 @@ public class User {
         }
         holder += "\nlongitude: " + longitude;
         holder += "\nlatitude: " + latitude;
+        holder += "\nonline: " + online;
         return holder;
     }
 
@@ -68,4 +71,5 @@ public class User {
     public Bitmap getPicture() {
         return picture;
     }
+    public Boolean getOnline(){return  online;}
 }

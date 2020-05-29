@@ -101,6 +101,12 @@ public class UserReference extends User {
         }
         else{latitude = null;}
 
+        Object oOnline = dataSnapshot.child("online").getValue();
+        if(oOnline != null){
+            online = (Boolean)oOnline;
+        }
+        else{online = null;}
+
         Object oPicture = dataSnapshot.child("picture").getValue();
         if(oPicture != null){
             picturePath = oPicture.toString();
@@ -155,7 +161,7 @@ public class UserReference extends User {
     public User GetCurrentUser(){
         List<String> tempGroups = new ArrayList<>();
         for(String s: groupIds){tempGroups.add(s);}
-        User temp = new User(userId, name, tempGroups, longitude, latitude, picturePath, picture);
+        User temp = new User(userId, name, tempGroups, longitude, latitude, picturePath, picture, online);
         return temp;
     }
     private void updateAllListeners(@NonNull User oldUser){

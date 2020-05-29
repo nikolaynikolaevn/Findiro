@@ -29,7 +29,6 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
     private TextView tvStatus;
 
     private FirebaseUser user;
-    private UserReference userReference;
 
     private int REQUESTCODE_SIGNUP = 123;
     private int REQUESTCODE_LOGIN = 321;
@@ -113,32 +112,26 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
 
     private void onLogin(){
         user = FirebaseAuth.getInstance().getCurrentUser();
-        userReference = new UserReference(user.getUid(), this, false);
-        /*
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/" + user.getUid() + "/name");
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                onLoginStatusUpdate(dataSnapshot.getValue().toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-         */
-
+        UserReference userReference = new UserReference(user.getUid(), this, false);
+        DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + user.getUid() + "/online");
+        curUserOnlineRef.setValue(true);
     }
-    private void onLoginStatusUpdate(){
-        String status = userReference.toString();
-        status += "\nemail: " + user.getEmail();
-        tvStatus.setText(status);
+    private void onLoginStatusUpdate(UserReference userReference){
+        if(user != null) {
+            String status = userReference.toString();
+            status += "\nemail: " + user.getEmail();
+            tvStatus.setText(status);
+        }
     }
 
     private  void onLogout(){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
+            curUserOnlineRef.setValue(false);
+        }
+
         user = null;
-        userReference = null;
         FirebaseAuth.getInstance().signOut();
         tvStatus.setText("You are NOT logged in");
     }
@@ -146,6 +139,6 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
 
     @Override
     public void UserValuesUpdated(@NonNull User oldUser, @NonNull UserReference newUser) {
-        onLoginStatusUpdate();
+        onLoginStatusUpdate(newUser);
     }
 }

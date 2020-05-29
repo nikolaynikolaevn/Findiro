@@ -22,6 +22,7 @@ import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.Profile.Login2_activity;
 import com.flamevision.findiro.Profile.Profile_activity;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
+import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -29,6 +30,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
@@ -104,6 +109,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
+
+        //when app is launched, the user should become online (if logged in) in the database
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
+            curUserOnlineRef.setValue(true);
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -165,5 +177,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return;
         }
         // other 'case' lines to check for other permissions this app might request
+    }
+
+    @Override
+    protected void onDestroy() {
+        //when app is destroyed, the user should become offline in the database
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
+            curUserOnlineRef.setValue(false);
+        }
+        super.onDestroy();
     }
 }
