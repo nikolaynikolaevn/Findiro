@@ -1,7 +1,10 @@
 package com.flamevision.findiro;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
@@ -23,16 +26,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.bumptech.glide.manager.LifecycleListener;
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.Profile.Login2_activity;
 import com.flamevision.findiro.Profile.Profile_activity;
+import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
+import com.flamevision.findiro.UserAndGroup.Group;
+import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,10 +47,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver {
+
+    private final int USER_LOGIN_CODE = 1;
 
     private Button btnTestUserAndGroup;
     private Button btnTestLoginAndSignUp;
+    private Button btnSelectGroup;
 
     //try new log in UI
     private Button btnTestTheo;
@@ -56,11 +69,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager lm;
     private Marker m;
 
+
+    private String userId = null;
+    Fragment selectGroupFragment;
+
+    final ArrayList<Group> groups = new ArrayList<>();
+
+    RealTimeLocation realTimeLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
@@ -81,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TestLoginAndSignupActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, USER_LOGIN_CODE);
             }
         });
 
@@ -107,8 +128,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         MapFragment mf = new MapFragment();
         getFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, mf).commit();
-
         mf.getMapAsync(this);
+
+        realTimeLocation = new RealTimeLocation();
+
+        selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
+        btnSelectGroup = findViewById(R.id.buttonSelectGroup);
+
+        btnSelectGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, selectGroupFragment).commit();
+            }
+        });
+
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
@@ -130,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gm = googleMap;
+        realTimeLocation.onMapReady(googleMap);
+
         Location location = null;
 
         Criteria criteria = new Criteria();
@@ -152,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (m != null) {
             m.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             gm.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            realTimeLocation.onLocationChanged(location);
         }
     }
 
@@ -172,18 +208,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]  grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted by the user
                     lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
-                }
-                else {
+                } else {
                     // permission was denied by the user
                 }
                 return;
         }
         // other 'case' lines to check for other permissions this app might request
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == USER_LOGIN_CODE) {
+            if (resultCode == R.integer.LoggedIn) {
+                userId = data.getStringExtra("userId");
+                realTimeLocation.onLogin(userId);
+            } else if (resultCode == R.integer.LoggedOut) {
+               realTimeLocation.onLogout();
+            }
+        }
+    }
+
+    @Override
+    public void GroupSelected(Group group) {
+        realTimeLocation.groupSelected(group);
+        getSupportFragmentManager().beginTransaction().remove(selectGroupFragment).commit();
     }
 }

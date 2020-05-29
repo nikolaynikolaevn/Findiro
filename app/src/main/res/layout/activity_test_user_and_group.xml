@@ -50,4 +50,5 @@
         android:text="show groups"
         app:layout_constraintStart_toEndOf="@+id/testUserAndGroupCreateGroupButton"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
