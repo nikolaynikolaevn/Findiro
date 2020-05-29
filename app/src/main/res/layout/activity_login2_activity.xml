@@ -13,7 +13,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="594dp"
             android:layout_weight="4"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_login" />
@@ -83,12 +83,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:layout_marginTop="20dp"
-            android:textColor="#fff"
-            android:text="Don't have an account? Sign up now"
+        <Button
+            android:id="@+id/btnSignUpValue"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_corner_buttom"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="sign up"
+            android:textColor="#777" />
     </LinearLayout>
 
 

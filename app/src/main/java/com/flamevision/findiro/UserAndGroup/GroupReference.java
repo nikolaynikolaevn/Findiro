@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +63,44 @@ public class GroupReference extends Group {
             }
         });
     }
+    public boolean DeleteGroup(){
+        if(groupCreator != null){
+            FirebaseUser curLoggedInUser = FirebaseAuth.getInstance().getCurrentUser();
+            if(curLoggedInUser != null){
+                if(curLoggedInUser.getUid().equals(groupCreator)){
+                    for(String userId: members){
+                        final String curGroupId = groupId;
+                        final String curUserId = userId;
+                        DatabaseReference userGroupRef = FirebaseDatabase.getInstance().getReference("Users/" + curUserId + "/groups");
+                        userGroupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot child: dataSnapshot.getChildren()){
+                                    if(child.getValue() != null){
+                                        String userGroupId = child.getValue().toString();
+                                        if(userGroupId.equals(curGroupId)){
+                                            DatabaseReference curUserGroupRef = FirebaseDatabase.getInstance().getReference("Users/" + curUserId + "/groups/" + child.getKey());
+                                            curUserGroupRef.removeValue();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                    groupRef.removeValue();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void updateValues(DataSnapshot dataSnapshot){
         Group oldGroup = GetCurrentGroup();
 
@@ -68,11 +108,13 @@ public class GroupReference extends Group {
         if(oName != null){
             name = oName.toString();
         }
+        else {name = null;}
 
         Object oGroupCreator = dataSnapshot.child("groupCreator").getValue();
         if(oGroupCreator != null){
             groupCreator = oGroupCreator.toString();
         }
+        else {groupCreator = null;}
 
         members = new ArrayList<>();
         for(DataSnapshot groupIdSnapShot : dataSnapshot.child("members").getChildren()){
@@ -81,6 +123,7 @@ public class GroupReference extends Group {
                 members.add(oMemberId.toString());
             }
         }
+
         if(printUpdate){printGroup();}
         updateAllListeners(oldGroup);
     }
@@ -113,4 +156,5 @@ public class GroupReference extends Group {
     public boolean isUpdateErrorOccurred() {
         return updateErrorOccurred;
     }
+    public DatabaseReference getGroupRef(){return groupRef;}
 }

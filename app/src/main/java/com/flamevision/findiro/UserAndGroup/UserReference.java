@@ -5,7 +5,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -78,6 +81,7 @@ public class UserReference extends User {
         if(oName != null){
             name = oName.toString();
         }
+        else{name = null;}
 
         groupIds = new ArrayList<>();
         for(DataSnapshot groupIdSnapShot : dataSnapshot.child("groups").getChildren()){
@@ -91,15 +95,27 @@ public class UserReference extends User {
         if(oLong != null){
             longitude = (double)oLong;
         }
+        else {longitude = null;}
 
         Object oLat = dataSnapshot.child("location").child("lat").getValue();
         if(oLat != null){
             latitude = (double)oLat;
         }
+        else{latitude = null;}
+
+        Object oOnline = dataSnapshot.child("online").getValue();
+        if(oOnline != null){
+            online = (Boolean)oOnline;
+        }
+        else{online = null;}
 
         Object oPicture = dataSnapshot.child("picture").getValue();
         if(oPicture != null){
             picturePath = oPicture.toString();
+        }
+        else{
+            picturePath = null;
+            picture = null;
         }
 
         if(printUpdate){printUser();}
@@ -120,11 +136,16 @@ public class UserReference extends User {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         picture = BitmapFactory.decodeFile(file.getAbsolutePath());
-
+                        file.delete();
                         if (printUpdate) {
                             printUser();
                         }
                         updateAllListeners(oldUserBeforePic);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        file.delete();
                     }
                 });
             } catch (IOException e) {
@@ -142,7 +163,7 @@ public class UserReference extends User {
     public User GetCurrentUser(){
         List<String> tempGroups = new ArrayList<>();
         for(String s: groupIds){tempGroups.add(s);}
-        User temp = new User(userId, name, tempGroups, longitude, latitude, picturePath, picture);
+        User temp = new User(userId, name, tempGroups, longitude, latitude, picturePath, picture, online);
         return temp;
     }
     private void updateAllListeners(@NonNull User oldUser){

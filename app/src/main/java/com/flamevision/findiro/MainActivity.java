@@ -5,6 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,12 +28,11 @@ import android.widget.Button;
 
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.Profile.Login2_activity;
+import com.flamevision.findiro.Profile.Profile_activity;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.Group;
-import com.flamevision.findiro.UserAndGroup.GroupReference;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
-import com.flamevision.findiro.UserAndGroup.User;
 import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,11 +42,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //try new log in UI
     private Button btnTestTheo;
+
+    //profile
+    private Button btnProfile;
 
     private GoogleMap gm;
     LocationManager lm;
@@ -101,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        btnTestTheo = findViewById(R.id.TestTheo);
+        //open new sign in
+        btnTestTheo=findViewById(R.id.TestTheoSignin);
         btnTestTheo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +116,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        //open profile
+        btnProfile=findViewById(R.id.ProfileTest);
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Profile_activity.class);
+                startActivity(intent);
+            }
+        });
 
         MapFragment mf = new MapFragment();
         getFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, mf).commit();
@@ -133,6 +148,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
+
+        //when app is launched, the user should become online (if logged in) in the database
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
+            curUserOnlineRef.setValue(true);
+            curUserOnlineRef.onDisconnect().setValue(false);
+        }
+
     }
 
     @SuppressLint("MissingPermission")

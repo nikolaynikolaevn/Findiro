@@ -1,6 +1,8 @@
 package com.flamevision.findiro.UserAndGroup;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flamevision.findiro.R;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,12 +32,16 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         private ImageView ivPicture;
         private TextView tvName;
         private ConstraintLayout layout;
+        private TextView tvOnline;
         private User user;
+
+        private Bitmap curPic;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.selectUserItemName);
             ivPicture = itemView.findViewById(R.id.selectUserItemPicture);
+            tvOnline = itemView.findViewById(R.id.selectUserItemOnline);
             layout = itemView.findViewById(R.id.selectUserLayout);
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,12 +77,29 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
         private void showUser(){
             tvName.setText(user.name);
+            if(user.online != null){
+                if(user.online == true){
+                    tvOnline.setText("online");
+                }
+                else {
+                    tvOnline.setText("offline");
+                }
+            }
+            else {
+                tvOnline.setText("unknown");
+            }
             if(user.picture == null){
                 Drawable defaultPic = context.getResources().getDrawable(R.drawable.ic_user);
                 ivPicture.setImageDrawable(defaultPic);
             }
-            else {
-                ivPicture.setImageBitmap(user.picture);
+            else if(user.picture != curPic){
+                //THIS IS NEEDED BECAUSE SCROLLING WAS VERY SLOW
+                curPic = user.picture;
+                int maxAllowed = 100;
+                int maxSize = Math.max(curPic.getWidth(), curPic.getHeight());
+                int div = maxSize/maxAllowed;
+                Bitmap resized = Bitmap.createScaledBitmap(curPic, curPic.getWidth()/div, curPic.getHeight()/div, true);
+                ivPicture.setImageBitmap(resized);
             }
         }
 

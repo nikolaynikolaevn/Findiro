@@ -8,56 +8,65 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="410dp"
-        android:layout_height="404dp"
+        android:layout_width="437dp"
+        android:layout_height="360dp"
         android:background="@drawable/backgroud"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="1dp" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="-13dp" />
 
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="165dp"
         android:layout_height="144dp"
-        app:srcCompat="@drawable/ic_user"
-        tools:layout_editor_absoluteX="133dp"
-        tools:layout_editor_absoluteY="108dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.265"
+        app:srcCompat="@drawable/ic_user" />
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="325dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="412dp"
+        android:layout_height="286dp"
+        android:layout_marginTop="425dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="405dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        tools:layout_editor_absoluteX="1dp">
 
         <TextView
-            android:id="@+id/tvUser"
+            android:id="@+id/txtUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="User Name"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/tvMyUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Theo Xu"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
 
         <TextView
-            android:id="@+id/tvAddress"
+            android:id="@+id/txtAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Email address"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/tvMyAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="t.xu@gmail.com"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
 
         <Button
             android:id="@+id/btnEdit"

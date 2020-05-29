@@ -121,7 +121,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
                     String name = userSnapShot.child("name").getValue().toString();
                     String userId = userSnapShot.getKey().toString();
                     Log.e("Show all users " ,"UserName: "+ name);
-                    User user = new User(userId, name, null, new Double(0), new Double(0), null, null);
+                    User user = new User(userId, name, null, new Double(0), new Double(0), null, null, null);
                     users.add(user);
                 }
             }
