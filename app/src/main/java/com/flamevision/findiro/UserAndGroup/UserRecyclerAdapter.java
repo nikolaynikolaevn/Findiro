@@ -29,12 +29,14 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         private ImageView ivPicture;
         private TextView tvName;
         private ConstraintLayout layout;
+        private TextView tvOnline;
         private User user;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.selectUserItemName);
             ivPicture = itemView.findViewById(R.id.selectUserItemPicture);
+            tvOnline = itemView.findViewById(R.id.selectUserItemOnline);
             layout = itemView.findViewById(R.id.selectUserLayout);
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,6 +72,17 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
         private void showUser(){
             tvName.setText(user.name);
+            if(user.online != null){
+                if(user.online == true){
+                    tvOnline.setText("online");
+                }
+                else {
+                    tvOnline.setText("offline");
+                }
+            }
+            else {
+                tvOnline.setText("unknown");
+            }
             if(user.picture == null){
                 Drawable defaultPic = context.getResources().getDrawable(R.drawable.ic_user);
                 ivPicture.setImageDrawable(defaultPic);
