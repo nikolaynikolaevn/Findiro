@@ -70,13 +70,23 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
         this.groups = null;
 
         for (Marker marker : uidMarkerHashMap.values()) {
-            marker.remove();
+            if (marker != null) {
+                marker.remove();
+            }
         }
 
         this.uidMarkerHashMap.clear();
     }
 
     public void groupSelected(Group group) {
+        for (Marker marker : uidMarkerHashMap.values()) {
+            if (marker != null) {
+                marker.remove();
+            }
+        }
+        this.uidMarkerHashMap.clear();
+        this.users.clear();
+
         for (String userId : group.getMembers()) {
             if (!userId.equals(currentUserReference.getUserId())) {
 
