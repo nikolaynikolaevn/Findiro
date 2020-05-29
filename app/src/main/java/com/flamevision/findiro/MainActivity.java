@@ -2,6 +2,10 @@ package com.flamevision.findiro;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,11 +17,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.bumptech.glide.manager.LifecycleListener;
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.Profile.Login2_activity;
 import com.flamevision.findiro.Profile.Profile_activity;
@@ -115,7 +121,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(firebaseUser != null) {
             DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
             curUserOnlineRef.setValue(true);
+            curUserOnlineRef.onDisconnect().setValue(false);
         }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -177,16 +185,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return;
         }
         // other 'case' lines to check for other permissions this app might request
-    }
-
-    @Override
-    protected void onDestroy() {
-        //when app is destroyed, the user should become offline in the database
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser != null) {
-            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
-            curUserOnlineRef.setValue(false);
-        }
-        super.onDestroy();
     }
 }

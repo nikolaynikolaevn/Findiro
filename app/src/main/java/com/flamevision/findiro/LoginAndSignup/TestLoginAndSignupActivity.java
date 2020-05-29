@@ -115,6 +115,7 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
         UserReference userReference = new UserReference(user.getUid(), this, false);
         DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + user.getUid() + "/online");
         curUserOnlineRef.setValue(true);
+        curUserOnlineRef.onDisconnect().setValue(false);
     }
     private void onLoginStatusUpdate(UserReference userReference){
         if(user != null) {
@@ -125,12 +126,6 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
     }
 
     private  void onLogout(){
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser != null) {
-            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
-            curUserOnlineRef.setValue(false);
-        }
-
         user = null;
         FirebaseAuth.getInstance().signOut();
         tvStatus.setText("You are NOT logged in");
