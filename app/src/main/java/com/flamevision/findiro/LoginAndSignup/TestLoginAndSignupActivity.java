@@ -114,6 +114,13 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
     private void onLogin(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         userReference = new UserReference(user.getUid(), this, false);
+
+        // Pass the userId to the MainActivity
+        Intent intent = new Intent();
+        intent.putExtra("userId", user.getUid());
+        setResult(R.integer.LoggedIn, intent);
+        // Pass the userId to the MainActivity
+
         /*
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/" + user.getUid() + "/name");
         userRef.addValueEventListener(new ValueEventListener() {
@@ -141,6 +148,9 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
         userReference = null;
         FirebaseAuth.getInstance().signOut();
         tvStatus.setText("You are NOT logged in");
+
+
+        setResult(R.integer.LoggedOut);
     }
 
 

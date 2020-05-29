@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="LoggedIn">1234</integer>
+    <integer name="LoggedOut">4321</integer>
+
+</resources>
