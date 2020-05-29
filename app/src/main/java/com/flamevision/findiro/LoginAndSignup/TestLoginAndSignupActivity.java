@@ -126,6 +126,13 @@ public class TestLoginAndSignupActivity extends AppCompatActivity implements Use
     }
 
     private  void onLogout(){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
+            curUserOnlineRef.setValue(false);
+            curUserOnlineRef.onDisconnect().cancel();
+        }
+
         user = null;
         FirebaseAuth.getInstance().signOut();
         tvStatus.setText("You are NOT logged in");
