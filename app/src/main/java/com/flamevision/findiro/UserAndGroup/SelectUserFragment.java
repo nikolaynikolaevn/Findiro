@@ -44,30 +44,7 @@ public class SelectUserFragment extends Fragment {
         UserRecyclerAdapter userRecyclerAdapter = new UserRecyclerAdapter(getContext(), users, userReceiver);
         recyclerView.setAdapter(userRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        /*
-        listView = view.findViewById(R.id.SelectUserListView);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object item = parent.getItemAtPosition(position);
-                Log.d("SELECT USER FRAGMENT", "ITEM CLICKED");
-                if(item != null){
-                    if(item instanceof User){
-                        User user = (User)item;
-                        Log.d("SELECT USER FRAGMENT", "USER " + user.getName() + " HAS BEEN SELECTED");
-                        if(userReceiver != null) {
-                            userReceiver.UserSelected(user);
-                        }
-                    }
-                }
-            }
-        });
-
-        listView.setAdapter(new CustomUserListAdapter(getContext(), this.users));
-        */
-
+        recyclerView.setHasFixedSize(true);
 
         return  view;
     }

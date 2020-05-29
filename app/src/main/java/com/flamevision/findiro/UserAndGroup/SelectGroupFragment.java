@@ -47,6 +47,7 @@ public class SelectGroupFragment extends Fragment {
         GroupRecyclerAdapter groupRecyclerAdapter = new GroupRecyclerAdapter(getContext(), groups, groupReceiver);
         recyclerView.setAdapter(groupRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
 
         /*
         listView = view.findViewById(R.id.SelectGroupListView);

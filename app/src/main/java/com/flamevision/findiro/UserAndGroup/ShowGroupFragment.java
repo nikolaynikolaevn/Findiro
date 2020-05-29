@@ -4,12 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +55,10 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_show_group, container, false);
 
-        btnMultiFunc = view.findViewById(R.id.ShowGroupMultiFuncButton);
-        tvGroupName = view.findViewById(R.id.ShowGroupName);
-        tvMemberTitle = view.findViewById(R.id.ShowGroupMemberTitle);
-        flMembers = view.findViewById(R.id.ShowGroupFragContainer);
+        btnMultiFunc = view.findViewById(R.id.showGroupMultiFuncButton);
+        tvGroupName = view.findViewById(R.id.showGroupName);
+        tvMemberTitle = view.findViewById(R.id.showGroupMemberTitle);
+        flMembers = view.findViewById(R.id.showGroupFragContainer);
 
         tvGroupName.setText(group.getName());
         tvMemberTitle.setText("Members in group: " + group.getMembers().size());
@@ -111,7 +108,7 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         FragmentManager fragManager = getFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
         SelectUserFragment fragment = new SelectUserFragment(this, members);
-        fragTrans.add(R.id.ShowGroupFragContainer, fragment, "MyTag");
+        fragTrans.add(R.id.showGroupFragContainer, fragment, "MyTag");
         fragTrans.commit();
 
         return view;
@@ -242,11 +239,13 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
                     i--;
                 }
             }
-            FragmentManager fragManager = getFragmentManager();
-            FragmentTransaction fragTrans = fragManager.beginTransaction();
-            SelectUserFragment fragment = new SelectUserFragment(this, members);
-            fragTrans.replace(R.id.ShowGroupFragContainer, fragment, "MyTag");
-            fragTrans.commit();
+            if(getActivity() != null) {
+                FragmentManager fragManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragTrans = fragManager.beginTransaction();
+                SelectUserFragment fragment = new SelectUserFragment(this, members);
+                fragTrans.replace(R.id.showGroupFragContainer, fragment, "MyTag");
+                fragTrans.commit();
+            }
         }
         tvGroupName.setText(newGroup.name);
         tvMemberTitle.setText("Members in group: " + newGroup.getMembers().size());

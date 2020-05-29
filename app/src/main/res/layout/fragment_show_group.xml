@@ -8,18 +8,18 @@
     tools:context=".UserAndGroup.ShowGroupFragment">
 
     <TextView
-        android:id="@+id/ShowGroupName"
+        android:id="@+id/showGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Group Name"
-        android:textSize="18sp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/ShowGroupMemberTitle"
+        android:id="@+id/showGroupMemberTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -27,23 +27,23 @@
         android:layout_marginTop="16dp"
         android:text="Group members:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShowGroupName" />
+        app:layout_constraintTop_toBottomOf="@+id/showGroupName" />
 
     <FrameLayout
-        android:id="@+id/ShowGroupFragContainer"
+        android:id="@+id/showGroupFragContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/ShowGroupMultiFuncButton"
+        app:layout_constraintBottom_toTopOf="@+id/showGroupMultiFuncButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShowGroupMemberTitle">
+        app:layout_constraintTop_toBottomOf="@+id/showGroupMemberTitle">
 
     </FrameLayout>
 
     <Button
-        android:id="@+id/ShowGroupMultiFuncButton"
+        android:id="@+id/showGroupMultiFuncButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
