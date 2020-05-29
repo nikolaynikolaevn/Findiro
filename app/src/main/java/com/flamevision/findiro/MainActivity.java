@@ -24,6 +24,7 @@ import android.widget.Button;
 
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
 import com.flamevision.findiro.Profile.Login2_activity;
+import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.Group;
 import com.flamevision.findiro.UserAndGroup.GroupReference;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
@@ -48,7 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver, UserReference.UserReferenceUpdate {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver {
 
     private final int USER_LOGIN_CODE = 1;
 
@@ -65,21 +66,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private String userId = null;
-    private UserReference userReference;
-    private DatabaseReference databaseReference;
-    private DatabaseReference groupsReference;
     Fragment selectGroupFragment;
 
-
-    private HashMap<String, Marker> uidMarkerHashMap = new HashMap<>();
-    private ArrayList<UserReference> userReferences = new ArrayList<>();
     final ArrayList<Group> groups = new ArrayList<>();
-    ArrayList<User> users = new ArrayList<>();
 
-
-    private DatabaseReference groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
-    private UserReference userReferenceThing;
-    private DatabaseReference updateLocationReference;
+    RealTimeLocation realTimeLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,36 +111,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-        ValueEventListener groupValueListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Show all groups", "Total groups: " + snapshot.getChildrenCount());
-                for (DataSnapshot groupSnapShot : snapshot.getChildren()) {
-                    Group group = new GroupReference(groupSnapShot.getKey(), null);
-                    groups.add(group);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase error", databaseError.getMessage());
-            }
-        };
-
-
         MapFragment mf = new MapFragment();
         getFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, mf).commit();
         mf.getMapAsync(this);
 
-        groupsRef.addListenerForSingleValueEvent(groupValueListener);
+        realTimeLocation = new RealTimeLocation();
 
+        selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
         btnSelectGroup = findViewById(R.id.buttonSelectGroup);
-        selectGroupFragment = new SelectGroupFragment(MainActivity.this, groups);
 
         btnSelectGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getSupportFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, selectGroupFragment).commit();
             }
         });
@@ -162,14 +135,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
     }
 
-    private void showSelectGroupFragment(int frameLayout, ArrayList<Group> groups) {
-
-    }
-
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gm = googleMap;
+        realTimeLocation.onMapReady(googleMap);
+
         Location location = null;
 
         Criteria criteria = new Criteria();
@@ -192,20 +163,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (m != null) {
             m.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             gm.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            realTimeLocation.onLocationChanged(location);
         }
-        if (userReference != null) {
-            updateLocationReference.child("long").setValue(location.getLongitude());
-            updateLocationReference.child("lat").setValue(location.getLatitude());
-//            userReference.child("location").child("long").setValue(location.getLongitude());
-//            userReference.child("location").child("lat").setValue(location.getLatitude());
-//            userReference.get
-//            for (String group : groups) {
-//                groupsReference.child(group).child("members").child(userId).child("longitude").setValue(location.getLongitude());
-//                groupsReference.child(group).child("members").child(userId).child("latitude").setValue(location.getLatitude());
-//            }
-        }
-
-        // Only own stuff to user json
     }
 
     @Override
@@ -245,84 +204,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == USER_LOGIN_CODE) {
             if (resultCode == R.integer.LoggedIn) {
                 userId = data.getStringExtra("userId");
-                groupsReference = FirebaseDatabase.getInstance().getReference("Groups");
-                userReference = new UserReference(userId, this, false);
-                updateLocationReference = FirebaseDatabase.getInstance().getReference("Users/").child(userId).child("location");
-//                userGroupsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot snap) {
-//                        for (DataSnapshot item : snap.getChildren()) {
-//                            groups.add((String) item.getValue());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
+                realTimeLocation.onLogin(userId);
             } else if (resultCode == R.integer.LoggedOut) {
-                userId = null;
-                userReference = null;
+               realTimeLocation.onLogout();
             }
         }
     }
 
     @Override
     public void GroupSelected(Group group) {
-        for (String userId : group.getMembers()) {
-            if (!userId.equals(userReference.getUserId())) {
-
-                userReferenceThing = new UserReference(userId, this, false);
-//            userReferences.add(userReferenceThing);
-                users.add(userReferenceThing);
-
-                Marker marker = null;
-                if (userReferenceThing.getLatitude() != null || userReferenceThing.getLongitude() != null) {
-                    marker = gm.addMarker(new MarkerOptions()
-                            .position(new LatLng(userReferenceThing.getLatitude(), userReferenceThing.getLongitude()))
-                            .title(userReferenceThing.getName())
-                            .icon(BitmapDescriptorFactory.defaultMarker(new Random().nextInt(360))));
-                }
-                uidMarkerHashMap.put(userReferenceThing.getUserId(), marker);
-            }
-
-        }
+        realTimeLocation.groupSelected(group);
         getSupportFragmentManager().beginTransaction().remove(selectGroupFragment).commit();
-    }
-
-    @Override
-    public void UserValuesUpdated(@NonNull User oldUser, @NonNull UserReference newUser) {
-        // Check old user long with new long....
-        if (newUser.getUserId().equals(userReference.getUserId())) {
-            return;
-        }
-
-        if (newUser.getLongitude() == null || newUser.getLatitude() == null) {
-            return;
-        }
-
-        if (oldUser.getLongitude() == null && oldUser.getLatitude() == null) {
-            if (uidMarkerHashMap.get(oldUser.getUserId()) == null) {
-                addMarker(oldUser, newUser);
-                return;
-            }
-        }
-
-        if (!oldUser.getLatitude().equals(newUser.getLatitude()) || !oldUser.getLongitude().equals(newUser.getLongitude())) {
-            Marker marker = uidMarkerHashMap.get(oldUser.getUserId());
-            marker.setPosition(new LatLng(newUser.getLatitude(), newUser.getLongitude()));
-        }
-
-        // Lijst bijhouden
-    }
-
-    private void addMarker(User oldUser, UserReference newUser) {
-
-        Marker marker = gm.addMarker(new MarkerOptions()
-                .position(new LatLng(newUser.getLatitude(), newUser.getLongitude()))
-                .title(newUser.getName())
-                .icon(BitmapDescriptorFactory.defaultMarker(new Random().nextInt(360))));
-        uidMarkerHashMap.put(oldUser.getUserId(), marker);
     }
 }
