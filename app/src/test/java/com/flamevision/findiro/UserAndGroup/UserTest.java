@@ -26,7 +26,7 @@ public class UserTest {
 
     @Test
     public void CreateUserWithData(){
-        User user = new User(userId, name, groups, longitude, latitude, picturePath, null);
+        User user = new User(userId, name, groups, longitude, latitude, picturePath, null, true);
         assert(user.getUserId()).equals(userId);
         assert(user.getGroupIds()).equals(groups);
         assert(user.getName()).equals(name);
@@ -37,7 +37,7 @@ public class UserTest {
 
     @Test
     public void ToStringContainsUserFields(){
-        User user = new User(userId, name, groups, longitude, latitude, picturePath, null);
+        User user = new User(userId, name, groups, longitude, latitude, picturePath, null, true);
         String result = user.toString();
         assert(result).contains(userId);
         assert(result).contains(name);
