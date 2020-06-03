@@ -34,7 +34,56 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
     private UserReference groupMemberReference;
     private ArrayList<UserReference> users = new ArrayList<>();
     private HashMap<String, Marker> uidMarkerHashMap = new HashMap<>();
+
     private DatabaseReference userGroupsReference;
+
+    public UserReference getCurrentUserReference() {
+        return currentUserReference;
+    }
+
+    public GoogleMap getGoogleMap() {
+        return googleMap;
+    }
+
+    public DatabaseReference getUpdateLocationReference() {
+        return updateLocationReference;
+    }
+
+    public ArrayList<String> getUserGroups() {
+        return userGroups;
+    }
+
+    public DatabaseReference getGroupsRef() {
+        return groupsRef;
+    }
+
+    public UserReference getGroupMemberReference() {
+        return groupMemberReference;
+    }
+
+    public ArrayList<UserReference> getUsers() {
+        return users;
+    }
+
+    public HashMap<String, Marker> getUidMarkerHashMap() {
+        return uidMarkerHashMap;
+    }
+
+    public DatabaseReference getUserGroupsReference() {
+        return userGroupsReference;
+    }
+
+    public ValueEventListener getGroupValueListener() {
+        return groupValueListener;
+    }
+
+    public ValueEventListener getUserGroupsValueListener() {
+        return userGroupsValueListener;
+    }
+
+    public ArrayList<Group> getGroups() {
+        return groups;
+    }
 
     private ValueEventListener groupValueListener = new ValueEventListener() {
         @Override
@@ -185,10 +234,6 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
             updateLocationReference.child("long").setValue(location.getLongitude());
             updateLocationReference.child("lat").setValue(location.getLatitude());
         }
-    }
-
-    public ArrayList<Group> getGroups() {
-        return groups;
     }
 
     private void addMarker(User oldUser, UserReference newUser) {
