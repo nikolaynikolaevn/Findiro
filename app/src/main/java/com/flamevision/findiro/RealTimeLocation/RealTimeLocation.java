@@ -140,7 +140,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
 
                 Marker marker = null;
                 // If there is location data add a marker
-                if (groupMemberReference.getLatitude() != null || groupMemberReference.getLongitude() != null) {
+                if (groupMemberReference.getLatitude() != null && groupMemberReference.getLongitude() != null) {
                     marker = googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(groupMemberReference.getLatitude(), groupMemberReference.getLongitude()))
                             .title(groupMemberReference.getName())
