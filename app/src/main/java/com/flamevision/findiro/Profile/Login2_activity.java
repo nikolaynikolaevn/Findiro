@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -39,11 +41,12 @@ public class Login2_activity extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPass;
     private Button btnLoginEmail;
-
     private Button signup;
+    private TextView staus;
 
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
+    //private int code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +56,29 @@ public class Login2_activity extends AppCompatActivity {
         etEmail = findViewById(R.id.EmailValue);
         etPass = findViewById(R.id.PassValue);
         btnLoginEmail = findViewById(R.id.btnSignValue);
-
-
+        staus=findViewById(R.id.Overview);
         mAuth = FirebaseAuth.getInstance();
 
         // [START initialize_fblogin]
         // Initialize Facebook Login button
         callbackManager = CallbackManager.Factory.create();
-
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+
 
         btnLoginEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginViaEmail();
+                {
+                    loginViaEmail();
+//                    if(code==1)
+//                    {
+//                        Intent intent = new Intent(Login2_activity.this, Profile_activity.class);
+//                        startActivity(intent);
+//                    }
+
+                }
+
             }
         });
 
@@ -80,8 +91,6 @@ public class Login2_activity extends AppCompatActivity {
             }
         });
     }
-
-
 
     // [START on_start_check_user]
     @Override
@@ -102,6 +111,7 @@ public class Login2_activity extends AppCompatActivity {
         if (email.equalsIgnoreCase("")) {
             etEmail.setError("You must enter your email.");
             error = true;
+
         }
         if (pass.equalsIgnoreCase("")) {
             etPass.setError("You must enter your password.");
@@ -123,6 +133,8 @@ public class Login2_activity extends AppCompatActivity {
                         Log.d("Login", "Login success");
                         setResult(RESULT_OK);
                         finish();
+                        staus.setText("Logged in");
+                        //code=1;
                     }
                     else {
                         //login failed
