@@ -1,14 +1,9 @@
 package com.flamevision.findiro;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,25 +15,22 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.flamevision.findiro.LoginAndSignup.TestLoginAndSignupActivity;
+import com.flamevision.findiro.Profile.EditProfile_activity;
 import com.flamevision.findiro.Profile.Login2_activity;
-import com.flamevision.findiro.Profile.Profile_activity;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.Group;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
 import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
-import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -48,8 +40,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver {
 
@@ -121,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Profile_activity.class);
+                Intent intent = new Intent(MainActivity.this, EditProfile_activity.class);
                 startActivity(intent);
             }
         });

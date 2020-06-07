@@ -90,7 +90,16 @@ tools:context=".Profile.EditProfile_activity">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_ui"
-            android:text="Save" />
+            android:onClick="updateUserProfile"
+            android:text="Change name" />
+
+        <Button
+            android:id="@+id/btnChanged"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ui"
+            android:onClick="setUserEmailAddress"
+            android:text="Change Email" />
 
     </LinearLayout>
 
