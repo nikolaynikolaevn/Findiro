@@ -13,10 +13,10 @@ public class User {
     protected List<String> groupIds = new ArrayList<>();
     protected Double longitude;
     protected Double latitude;
-    protected String picturePath;
+    public String picturePath;
     protected Boolean online;
 
-    protected Bitmap picture;
+    public Bitmap picture;
 
     public User() {
 

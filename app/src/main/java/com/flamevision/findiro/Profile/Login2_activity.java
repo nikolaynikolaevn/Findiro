@@ -46,7 +46,7 @@ public class Login2_activity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
-    //private int code;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +71,7 @@ public class Login2_activity extends AppCompatActivity {
             public void onClick(View v) {
                 {
                     loginViaEmail();
-//                    if(code==1)
-//                    {
-//                        Intent intent = new Intent(Login2_activity.this, Profile_activity.class);
-//                        startActivity(intent);
-//                    }
-
                 }
-
             }
         });
 
@@ -134,7 +127,6 @@ public class Login2_activity extends AppCompatActivity {
                         setResult(RESULT_OK);
                         finish();
                         staus.setText("Logged in");
-                        //code=1;
                     }
                     else {
                         //login failed
@@ -157,8 +149,6 @@ public class Login2_activity extends AppCompatActivity {
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();
-
-        //updateUI(null);
     }
 
     // [START on_activity_result]

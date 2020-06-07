@@ -51,7 +51,7 @@
             android:id="@+id/tvMyUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Theo Xu"
+            android:text="..."
             android:textSize="25dp" />
 
         <TextView
@@ -65,7 +65,7 @@
             android:id="@+id/tvMyAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="t.xu@gmail.com"
+            android:text=".."
             android:textSize="25dp" />
 
         <Button
