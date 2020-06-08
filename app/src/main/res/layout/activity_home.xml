@@ -21,11 +21,11 @@
         android:id="@+id/ProfileTest"
         android:layout_width="172dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="92dp"
         android:text="Profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.949"
+        app:layout_constraintHorizontal_bias="0.933"
         app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
@@ -57,23 +57,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/TestTheoSignin"
-        android:layout_width="168dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="8dp"
-        android:text="New sign in test"
-        app:layout_constraintBottom_toTopOf="@+id/mainTestUserAndGroupButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.934"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/buttonSelectGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="Select group"
-        app:layout_constraintTop_toBottomOf="@+id/mainTestUserAndGroupButton"
-        app:layout_constraintStart_toStartOf="@+id/mainTestUserAndGroupButton"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mainTestUserAndGroupButton"
+        tools:layout_editor_absoluteY="656dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

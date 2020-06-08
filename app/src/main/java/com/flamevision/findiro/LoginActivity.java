@@ -1,15 +1,12 @@
 package com.flamevision.findiro;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,14 +14,10 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.flamevision.findiro.LoginAndSignup.CustomLoginActivity;
 import com.flamevision.findiro.LoginAndSignup.CustomSignupActivity;
-import com.flamevision.findiro.Profile.Login2_activity;
+import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -35,9 +28,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.concurrent.Executor;
-
-public class LoginFragment extends Fragment {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = CustomLoginActivity.class.getName();
 
@@ -50,18 +41,15 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
 
-    public LoginFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public void onViewCreated (View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-        etEmail = view.findViewById(R.id.EmailValue);
-        etPass = view.findViewById(R.id.PassValue);
-        btnLoginEmail = view.findViewById(R.id.btnSignValue);
-        staus = view.findViewById(R.id.Overview);
+        etEmail = findViewById(R.id.EmailValue);
+        etPass = findViewById(R.id.PassValue);
+        btnLoginEmail = findViewById(R.id.btnSignValue);
+        staus = findViewById(R.id.Overview);
         mAuth = FirebaseAuth.getInstance();
 
         // [START initialize_fblogin]
@@ -74,27 +62,18 @@ public class LoginFragment extends Fragment {
         btnLoginEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                {
-                    loginViaEmail();
-                }
+                loginViaEmail();
             }
         });
 
-        signup = view.findViewById(R.id.btnSignUpValue);
+        signup = findViewById(R.id.btnSignUpValue);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CustomSignupActivity.class);
+                Intent intent = new Intent(LoginActivity.this, CustomSignupActivity.class);
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     // [START on_start_check_user]
@@ -112,7 +91,7 @@ public class LoginFragment extends Fragment {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -123,7 +102,7 @@ public class LoginFragment extends Fragment {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
@@ -154,19 +133,20 @@ public class LoginFragment extends Fragment {
 
         if(error){
             Log.d("Login", "EditText error occurred");
-            Toast.makeText(getActivity(), "Log in failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
         }
         else  {
             Log.d("Login", "Trying to login");
             FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+            auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         //login success
                         Log.d("Login", "Login success");
-                        getActivity().setResult(getActivity().RESULT_OK);
-                        getActivity().finish();
+                        setResult(RESULT_OK);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                     else {
                         //login failed
@@ -179,7 +159,7 @@ public class LoginFragment extends Fragment {
                             //email does exists, but wrong password
                             etPass.setError("Wrong password.");
                         }
-                        Toast.makeText(getActivity(), "Log in failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

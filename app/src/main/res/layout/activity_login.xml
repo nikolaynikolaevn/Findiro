@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginFragment">
+    tools:context=".LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -13,7 +13,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="594dp"
+            android:layout_height="400dp"
             android:layout_weight="4"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_login" />
@@ -32,11 +32,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_margin="?actionBarSize"
+            android:layout_margin="20dp"
             android:textStyle="bold"
             android:textSize="40sp"
             android:textColor="#fff"
-            android:text="Findiro"
+            android:text="Sign In"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -108,7 +108,7 @@
 
         <TextView
             android:layout_marginBottom="10dp"
-            android:text="Or Signup with"
+            android:text="Or Sign up with"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <LinearLayout

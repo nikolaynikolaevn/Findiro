@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="#522a5c"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:gravity="bottom"
     android:paddingLeft="15dp"
@@ -12,10 +12,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:layout_marginBottom="15dp"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/ic_user" />
 
     <TextView
         android:layout_width="match_parent"

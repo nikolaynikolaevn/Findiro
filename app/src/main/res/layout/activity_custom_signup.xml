@@ -1,94 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginAndSignup.CustomSignupActivity">
 
-    <TextView
-        android:id="@+id/customSignupTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Signup screen"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="671dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_login" />
+    </LinearLayout>
+
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customSignupTitle">
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textColor="#fff"
+            android:textSize="40sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/customSignupPicture"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             app:srcCompat="@drawable/ic_edit" />
-
-        <TextView
-            android:id="@+id/customSignupEmailTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Email:" />
-
-        <EditText
-            android:id="@+id/customSignupEmailText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <TextView
-            android:id="@+id/customSignupNameTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name:" />
-
-        <EditText
-            android:id="@+id/customSignupNameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <TextView
-            android:id="@+id/customSignupPasswordTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Password:" />
-
-        <EditText
-            android:id="@+id/customSignupPasswordText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/customSignupPictureButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="choose profile picture" />
+            android:layout_margin="15dp"
+            android:text="Choose profile picture" />
+
+        <EditText
+            android:id="@+id/SignUp_EmailValue"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="Email"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="#fff"
+            android:textColorHint="#eee"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/SignUp_NameValue"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="Name"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="#fff"
+            android:textColorHint="#eee"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/SignUp_PassValue"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="#fff"
+            android:textColorHint="#eee"
+            android:textSize="17sp" />
 
         <Button
-            android:id="@+id/customSignupButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Sign up" />
+            android:id="@+id/btnSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/round_corner_buttom"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Sign up"
+            android:textColor="#777" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

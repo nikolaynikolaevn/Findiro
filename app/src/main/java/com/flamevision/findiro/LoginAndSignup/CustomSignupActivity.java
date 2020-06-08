@@ -50,10 +50,10 @@ public class CustomSignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_signup);
 
-        etEmail = findViewById(R.id.customSignupEmailText);
-        etPass = findViewById(R.id.customSignupPasswordText);
-        etName = findViewById(R.id.customSignupNameText);
-        btnSignup = findViewById(R.id.customSignupButton);
+        etEmail = findViewById(R.id.SignUp_EmailValue);
+        etPass = findViewById(R.id.SignUp_PassValue);
+        etName = findViewById(R.id.SignUp_NameValue);
+        btnSignup = findViewById(R.id.btnSignUp);
         btnChoosePicture = findViewById(R.id.customSignupPictureButton);
         ivPicture = findViewById(R.id.customSignupPicture);
 
