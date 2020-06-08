@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="Groups" />
+    </group>
+
+
+    <item android:title="Account Settings">
+        <menu>
+            <item
+                android:id="@+id/nav_update"
+                android:icon="@drawable/ic_mode_edit_black_24dp"
+                android:title="Update Profile"/>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Sign Out"/>
+        </menu>
+    </item>
+</menu>
