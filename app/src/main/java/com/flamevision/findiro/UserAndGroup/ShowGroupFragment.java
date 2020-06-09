@@ -244,7 +244,7 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
                 FragmentTransaction fragTrans = fragManager.beginTransaction();
                 SelectUserFragment fragment = new SelectUserFragment(this, members);
                 fragTrans.replace(R.id.showGroupFragContainer, fragment, "MyTag");
-                fragTrans.commit();
+                fragTrans.commitAllowingStateLoss();
             }
         }
         tvGroupName.setText(newGroup.name);

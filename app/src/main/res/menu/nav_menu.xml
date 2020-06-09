@@ -10,6 +10,10 @@
             android:id="@+id/nav_all_groups"
             android:icon="@drawable/ic_people_black_24dp"
             android:title="All Groups" />
+        <item
+            android:id="@+id/nav_create_group"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="Create Group" />
     </group>
 
 

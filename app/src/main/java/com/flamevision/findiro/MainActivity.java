@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.flamevision.findiro.Profile.EditProfile_activity;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
+import com.flamevision.findiro.UserAndGroup.CreateGroupFragment;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
 import com.flamevision.findiro.UserAndGroup.User;
 import com.flamevision.findiro.UserAndGroup.UserReference;
@@ -153,6 +154,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.nav_all_groups:
                 fragment = new AllGroupsFragment();
                 title.setText("All Groups");
+                break;
+            case R.id.nav_create_group:
+                fragment = new CreateGroupFragment();
+                title.setText("Create Group");
                 break;
             case R.id.nav_update:
                 //open profile
