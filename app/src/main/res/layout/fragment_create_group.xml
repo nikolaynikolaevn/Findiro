@@ -15,7 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="goup name"
+        android:text="@string/group_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,7 +37,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Create group"
+        android:text="@string/create_group"
         app:layout_constraintEnd_toEndOf="@+id/createGroupFragName"
         app:layout_constraintStart_toStartOf="@+id/createGroupFragName"
         app:layout_constraintTop_toBottomOf="@+id/createGroupFragName" />

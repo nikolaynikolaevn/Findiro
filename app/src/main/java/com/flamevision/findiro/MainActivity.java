@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.id.nav_create_group:
                 fragment = new CreateGroupFragment();
-                title.setText("Create Group");
+                title.setText(R.string.create_group);
                 break;
             case R.id.nav_update:
                 //open profile
