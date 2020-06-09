@@ -9,7 +9,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
@@ -23,7 +22,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,8 +31,8 @@ import com.flamevision.findiro.Profile.EditProfile_activity;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
 import com.flamevision.findiro.UserAndGroup.CreateGroupFragment;
+import com.flamevision.findiro.UserAndGroup.Group;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
-import com.flamevision.findiro.UserAndGroup.User;
 import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.material.navigation.NavigationView;
@@ -45,13 +43,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver, NavigationView.OnNavigationItemSelectedListener  {
 
     private final int USER_LOGIN_CODE = 1;
 
@@ -66,8 +64,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String userId = null;
 
     private TextView title;
+    private TextView navLoggedInName;
+    private TextView navLoggedInEmail;
 
+    /* Firebase */
+    private FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+
+    /* Custom auth */
     RealTimeLocation realTimeLocation;
+    UserReference loggedInUser;
+
+    Fragment selectGroupFragment;
+
+    SupportMapFragment mf;
 
     private UserReference curUserReference = null;
 
@@ -77,9 +87,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         title = findViewById(R.id.fragment_title);
+        title.setText(getString(R.string.home));
 
-        MapFragment mf = new MapFragment();
-        getFragmentManager().beginTransaction().add(R.id.fragment_container, mf).commit();
+        mf = new SupportMapFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mf).commit();
         mf.getMapAsync(this);
 
         toolbar = findViewById(R.id.toolbar);
@@ -93,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ){
             @Override
             public void onDrawerOpened(View drawerView) {
-                ImageView navHeaderImage = findViewById(R.id.navHeaderImage);
-                TextView navHeaderMail = findViewById(R.id.navHeaderMail);
-                TextView navHeaderName = findViewById(R.id.navHeaderName);
+                ImageView navHeaderImage = findViewById(R.id.nav_image);
+                TextView navHeaderMail = findViewById(R.id.nav_email);
+                TextView navHeaderName = findViewById(R.id.nav_name);
                 if(curUserReference != null) {
                     navHeaderName.setText(curUserReference.getName());
                     if(curUserReference.getPicture() == null){
@@ -105,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     else {
                         navHeaderImage.setImageBitmap(curUserReference.getPicture());
                     }
-                    navHeaderMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    navHeaderMail.setText(firebaseUser.getEmail());
                 }
 
                 super.onDrawerOpened(drawerView);
@@ -117,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         toggle.syncState();
         navView.setNavigationItemSelectedListener(this);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
         realTimeLocation = new RealTimeLocation();
 
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -126,18 +140,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
 
-        //when app is launched, the user should become online (if logged in) in the database
-
-
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
             curUserOnlineRef.setValue(true);
             curUserOnlineRef.onDisconnect().setValue(false);
 
+//            loggedInUser = realTimeLocation.getCurrentUserReference();
+//
+//            navLoggedInName = findViewById(R.id.nav_name);
+//            navLoggedInName.setText(loggedInUser.getName());
+//
+//            navLoggedInEmail = findViewById(R.id.nav_email);
+//            navLoggedInEmail.setText(loggedInUser.getUserId());
+
+//            navLoggedInName = findViewById(R.id.nav_name);
+//            navLoggedInName.setText(firebaseUser.getDisplayName());
+//
+//            navLoggedInEmail = findViewById(R.id.nav_email);
+//            navLoggedInEmail.setText(firebaseUser.getEmail());
+
             //set user values in nav header
              curUserReference = new UserReference(firebaseUser.getUid(), null, true);
         }
+
+        selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
     }
 
     @Override
@@ -147,13 +173,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent;
 
         switch (item.getItemId()) {
-            case R.id.nav_groups:
-                fragment = new SelectGroupFragment(null, realTimeLocation.getGroups());
-                title.setText(getString(R.string.groups));
+            case R.id.nav_home:
+                fragment = mf;
+                title.setText(getString(R.string.home));
+                break;
+            case R.id.nav_my_groups:
+                fragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
+                title.setText(getString(R.string.my_groups));
                 break;
             case R.id.nav_all_groups:
                 fragment = new AllGroupsFragment();
-                title.setText("All Groups");
+                title.setText(getString(R.string.all_groups));
                 break;
             case R.id.nav_create_group:
                 fragment = new CreateGroupFragment();
@@ -165,17 +195,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
                 break;
             case R.id.nav_logout:
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                if(auth.getCurrentUser() != null){
-                    auth.signOut();
-                }
+                firebaseAuth.signOut();
+                //LoginManager.getInstance().logOut();
                 curUserReference = null;
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
             default:
-                fragment = new SelectGroupFragment(null, realTimeLocation.getGroups());
-                title.setText(getString(R.string.groups));
+                fragment = mf;
+                title.setText(getString(R.string.home));
         }
 
         if(fragment != null) {
@@ -262,5 +290,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 realTimeLocation.onLogout();
             }
         }
+    }
+
+    @Override
+    public void GroupSelected(Group group) {
+        realTimeLocation.groupSelected(group);
+        getSupportFragmentManager().beginTransaction().remove(selectGroupFragment).commit();
     }
 }
