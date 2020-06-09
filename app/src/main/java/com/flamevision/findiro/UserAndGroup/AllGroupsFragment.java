@@ -30,7 +30,7 @@ public class AllGroupsFragment extends Fragment implements SelectGroupFragment.G
     private List<Group> groups;
 
     public AllGroupsFragment() {
-        groups = new ArrayList<>();
+
     }
 
 
@@ -40,6 +40,7 @@ public class AllGroupsFragment extends Fragment implements SelectGroupFragment.G
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_groups, container, false);
 
+        groups = new ArrayList<>();
         fillGroupListAndShow();
 
         return view;

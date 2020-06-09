@@ -167,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.nav_logout:
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 if(auth.getCurrentUser() != null){
+                    DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + auth.getCurrentUser().getUid() + "/online");
+                    curUserOnlineRef.setValue(false);
+                    curUserOnlineRef.onDisconnect().cancel();
                     auth.signOut();
                 }
                 curUserReference = null;
