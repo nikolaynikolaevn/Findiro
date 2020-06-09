@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button signup;
     private TextView staus;
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth firebaseAuth;
     private CallbackManager callbackManager;
 
     @Override
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         etPass = findViewById(R.id.PassValue);
         btnLoginEmail = findViewById(R.id.btnSignValue);
         staus = findViewById(R.id.Overview);
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // [START initialize_fblogin]
         // Initialize Facebook Login button
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     }
     // [END on_start_check_user]
 
@@ -90,14 +90,13 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        mAuth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -112,8 +111,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     // [END auth_with_facebook]
-
-
 
     private void loginViaEmail(){
         String email = etEmail.getText().toString().trim();
@@ -137,8 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         else  {
             Log.d("Login", "Trying to login");
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
@@ -167,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signOut() {
-        mAuth.signOut();
+        firebaseAuth.signOut();
         LoginManager.getInstance().logOut();
 
         //updateUI(null);
