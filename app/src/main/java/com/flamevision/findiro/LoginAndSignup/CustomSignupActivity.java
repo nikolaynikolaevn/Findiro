@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.flamevision.findiro.LoginActivity;
+import com.flamevision.findiro.MainActivity;
 import com.flamevision.findiro.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -160,20 +162,25 @@ public class CustomSignupActivity extends AppCompatActivity {
                     curUserRef.child("picture").setValue(pictureUrl);
                     Log.d("Sign up", "Picture has been uploaded to storage");
                     setResult(RESULT_OK);
-                    finish();
+                    goToMain();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("Sign up", "Picture failed to upload to storage");
                     setResult(RESULT_OK);
-                    finish();
+                    goToMain();
                 }
             });
         }
         else {
             setResult(RESULT_OK);
-            finish();
+            goToMain();
         }
+    }
+
+    private void goToMain(){
+        Intent intent = new Intent(CustomSignupActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }
