@@ -17,6 +17,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -25,12 +26,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flamevision.findiro.Profile.EditProfile_activity;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
+import com.flamevision.findiro.UserAndGroup.User;
+import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.material.navigation.NavigationView;
 
@@ -46,7 +50,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private final int USER_LOGIN_CODE = 1;
 
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView title;
 
     RealTimeLocation realTimeLocation;
+
+    private UserReference curUserReference = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, 0, 0
-        );
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                ImageView navHeaderImage = findViewById(R.id.navHeaderImage);
+                TextView navHeaderMail = findViewById(R.id.navHeaderMail);
+                TextView navHeaderName = findViewById(R.id.navHeaderName);
+                if(curUserReference != null) {
+                    navHeaderName.setText(curUserReference.getName());
+                    if(curUserReference.getPicture() == null){
+                        Drawable defaultPic = getResources().getDrawable(R.drawable.ic_user);
+                        navHeaderImage.setImageDrawable(defaultPic);
+                    }
+                    else {
+                        navHeaderImage.setImageBitmap(curUserReference.getPicture());
+                    }
+                    navHeaderMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                }
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -99,11 +126,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
 
         //when app is launched, the user should become online (if logged in) in the database
+
+
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
             curUserOnlineRef.setValue(true);
             curUserOnlineRef.onDisconnect().setValue(false);
+
+            //set user values in nav header
+             curUserReference = new UserReference(firebaseUser.getUid(), null, true);
         }
     }
 
@@ -132,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(auth.getCurrentUser() != null){
                     auth.signOut();
                 }
+                curUserReference = null;
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
