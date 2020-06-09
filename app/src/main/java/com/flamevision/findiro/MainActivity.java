@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         title.setText(getString(R.string.home));
 
         mf = new SupportMapFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mf).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mf).addToBackStack("first").commit();
         mf.getMapAsync(this);
 
         toolbar = findViewById(R.id.toolbar);
@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         if(fragment != null) {
+            getSupportFragmentManager().popBackStack("first", 0);
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
             transaction.commit();
