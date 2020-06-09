@@ -3,30 +3,33 @@
 
     <group>
         <item
-            android:id="@+id/nav_groups"
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_my_groups"
             android:icon="@drawable/ic_people_black_24dp"
-            android:title="Groups" />
+            android:title="@string/my_groups" />
         <item
             android:id="@+id/nav_all_groups"
             android:icon="@drawable/ic_people_black_24dp"
-            android:title="All Groups" />
+            android:title="@string/all_groups" />
         <item
             android:id="@+id/nav_create_group"
             android:icon="@drawable/ic_people_black_24dp"
-            android:title="Create Group" />
+            android:title="@string/create_group" />
     </group>
 
-
-    <item android:title="Account Settings">
+    <item android:title="@string/account_settings">
         <menu>
             <item
                 android:id="@+id/nav_update"
                 android:icon="@drawable/ic_mode_edit_black_24dp"
-                android:title="Update Profile"/>
+                android:title="@string/update_profile"/>
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_exit_to_app_black_24dp"
-                android:title="Sign Out"/>
+                android:title="@string/sign_out"/>
         </menu>
     </item>
 </menu>
