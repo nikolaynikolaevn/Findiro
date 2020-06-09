@@ -216,6 +216,7 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
                 //group has been deleted
                 Toast.makeText(getContext(), "Group has been deleted", Toast.LENGTH_SHORT).show();
                 showEmptyFragment();
+                getActivity().onBackPressed();
                 return;
             }
             //Add new members

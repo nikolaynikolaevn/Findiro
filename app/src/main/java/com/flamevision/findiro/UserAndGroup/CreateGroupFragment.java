@@ -74,6 +74,8 @@ public class CreateGroupFragment extends Fragment {
             userNewGroupRef.setValue(groupRef.getKey());
 
             Toast.makeText(getContext(), "Group has been created", Toast.LENGTH_LONG).show();
+
+            getActivity().onBackPressed();
         }
     }
 }
