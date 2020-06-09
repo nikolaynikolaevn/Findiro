@@ -22,6 +22,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -127,7 +128,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
                 break;
             case R.id.nav_logout:
-                intent = new Intent(MainActivity.this, HomeActivity.class);
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                if(auth.getCurrentUser() != null){
+                    auth.signOut();
+                }
+                intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
             default:
@@ -135,9 +140,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title.setText(getString(R.string.groups));
         }
 
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if(fragment != null) {
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

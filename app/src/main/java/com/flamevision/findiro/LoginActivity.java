@@ -74,6 +74,12 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            //USER IS LOGGED IN
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     // [START on_start_check_user]
@@ -164,13 +170,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public void signOut() {
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-
-        //updateUI(null);
     }
 
     // [START on_activity_result]
