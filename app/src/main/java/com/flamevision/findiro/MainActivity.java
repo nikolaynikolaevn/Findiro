@@ -9,7 +9,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
@@ -17,14 +16,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flamevision.findiro.Profile.EditProfile_activity;
@@ -32,6 +32,8 @@ import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.Group;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
 import com.flamevision.findiro.UserAndGroup.UserReference;
+import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.material.navigation.NavigationView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +44,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     SupportMapFragment mf;
 
+    private UserReference curUserReference = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +100,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, 0, 0
-        );
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                ImageView navHeaderImage = findViewById(R.id.nav_image);
+                TextView navHeaderMail = findViewById(R.id.nav_email);
+                TextView navHeaderName = findViewById(R.id.nav_name);
+                if(curUserReference != null) {
+                    navHeaderName.setText(curUserReference.getName());
+                    if(curUserReference.getPicture() == null){
+                        Drawable defaultPic = getResources().getDrawable(R.drawable.ic_user);
+                        navHeaderImage.setImageDrawable(defaultPic);
+                    }
+                    else {
+                        navHeaderImage.setImageBitmap(curUserReference.getPicture());
+                    }
+                    navHeaderMail.setText(firebaseUser.getEmail());
+                }
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -128,11 +152,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            navLoggedInEmail = findViewById(R.id.nav_email);
 //            navLoggedInEmail.setText(loggedInUser.getUserId());
 
-            navLoggedInName = findViewById(R.id.nav_name);
-            navLoggedInName.setText(firebaseUser.getDisplayName());
+//            navLoggedInName = findViewById(R.id.nav_name);
+//            navLoggedInName.setText(firebaseUser.getDisplayName());
+//
+//            navLoggedInEmail = findViewById(R.id.nav_email);
+//            navLoggedInEmail.setText(firebaseUser.getEmail());
 
-            navLoggedInEmail = findViewById(R.id.nav_email);
-            navLoggedInEmail.setText(firebaseUser.getEmail());
+            //set user values in nav header
+             curUserReference = new UserReference(firebaseUser.getUid(), null, true);
         }
 
         selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
@@ -149,9 +176,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 fragment = mf;
                 title.setText(getString(R.string.home));
                 break;
-            case R.id.nav_groups:
+            case R.id.nav_my_groups:
                 fragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
-                title.setText(getString(R.string.groups));
+                title.setText(getString(R.string.my_groups));
+                break;
+            case R.id.nav_all_groups:
+                fragment = new AllGroupsFragment();
+                title.setText(getString(R.string.all_groups));
                 break;
             case R.id.nav_update:
                 //open profile
@@ -160,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.id.nav_logout:
                 firebaseAuth.signOut();
+                //LoginManager.getInstance().logOut();
+                curUserReference = null;
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
@@ -168,9 +201,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title.setText(getString(R.string.home));
         }
 
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if(fragment != null) {
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

@@ -7,11 +7,14 @@
             android:icon="@drawable/ic_home_black"
             android:title="@string/home" />
         <item
-            android:id="@+id/nav_groups"
+            android:id="@+id/nav_my_groups"
             android:icon="@drawable/ic_people_black_24dp"
-            android:title="@string/groups" />
+            android:title="@string/my_groups" />
+        <item
+            android:id="@+id/nav_all_groups"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/all_groups" />
     </group>
-
 
     <item android:title="@string/account_settings">
         <menu>

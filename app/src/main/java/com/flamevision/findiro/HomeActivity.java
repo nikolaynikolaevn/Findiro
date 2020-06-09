@@ -57,33 +57,38 @@ public class HomeActivity extends AppCompatActivity implements SelectGroupFragme
 
         setContentView(R.layout.activity_home);
 
-        btnTestUserAndGroup = findViewById(R.id.mainTestUserAndGroupButton);
-        btnTestUserAndGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, TestUserAndGroupActivity.class);
-                startActivity(intent);
-            }
-        });
+        finish();
+        //SHOULD NOT BE STARTED ANYMORE
+        if(false) {
 
-        btnTestLoginAndSignUp = findViewById(R.id.mainTestLoginAndSignup);
-        btnTestLoginAndSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, TestLoginAndSignupActivity.class);
-                startActivityForResult(intent, USER_LOGIN_CODE);
-            }
-        });
+            btnTestUserAndGroup = findViewById(R.id.mainTestUserAndGroupButton);
+            btnTestUserAndGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, TestUserAndGroupActivity.class);
+                    startActivity(intent);
+                }
+            });
 
-        selectGroupFragment = new SelectGroupFragment(HomeActivity.this, realTimeLocation.getGroups());
-        btnSelectGroup = findViewById(R.id.buttonSelectGroup);
+            btnTestLoginAndSignUp = findViewById(R.id.mainTestLoginAndSignup);
+            btnTestLoginAndSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, TestLoginAndSignupActivity.class);
+                    startActivityForResult(intent, USER_LOGIN_CODE);
+                }
+            });
 
-        btnSelectGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, selectGroupFragment).commit();
-            }
-        });
+            selectGroupFragment = new SelectGroupFragment(HomeActivity.this, realTimeLocation.getGroups());
+            btnSelectGroup = findViewById(R.id.buttonSelectGroup);
+
+            btnSelectGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getSupportFragmentManager().beginTransaction().add(R.id.framelayout_main_fragmentcontainer, selectGroupFragment).commit();
+                }
+            });
+        }
     }
 
     @Override

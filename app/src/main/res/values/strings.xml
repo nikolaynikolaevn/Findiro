@@ -2,7 +2,8 @@
     <string name="app_name">Findiro</string>
 
     <string name="home">Home</string>
-    <string name="groups">Groups</string>
+    <string name="my_groups">My Groups</string>
+    <string name="all_groups">All Groups</string>
     <string name="update_profile">Update Profile</string>
     <string name="account_settings">Account Settings</string>
     <string name="sign_out">Sign Out</string>

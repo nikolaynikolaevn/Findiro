@@ -16,7 +16,7 @@ tools:context=".Profile.EditProfile_activity">
         android:theme="?attr/actionBarTheme" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/navHeaderImage"
         android:layout_width="141dp"
         android:layout_height="166dp"
         android:layout_alignBottom="@+id/toolbar"

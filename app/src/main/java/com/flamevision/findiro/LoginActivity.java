@@ -17,7 +17,6 @@ import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.flamevision.findiro.LoginAndSignup.CustomLoginActivity;
 import com.flamevision.findiro.LoginAndSignup.CustomSignupActivity;
-import com.flamevision.findiro.UserAndGroup.TestUserAndGroupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -36,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPass;
     private Button btnLoginEmail;
     private Button signup;
-    private TextView staus;
 
     private FirebaseAuth firebaseAuth;
     private CallbackManager callbackManager;
@@ -49,8 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.EmailValue);
         etPass = findViewById(R.id.PassValue);
         btnLoginEmail = findViewById(R.id.btnSignValue);
-        staus = findViewById(R.id.Overview);
-        firebaseAuth = FirebaseAuth.getInstance();
 
         // [START initialize_fblogin]
         // Initialize Facebook Login button
@@ -74,6 +70,12 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            //USER IS LOGGED IN
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     // [START on_start_check_user]
@@ -81,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+        firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     }
     // [END on_start_check_user]
@@ -160,13 +163,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public void signOut() {
-        firebaseAuth.signOut();
-        LoginManager.getInstance().logOut();
-
-        //updateUI(null);
     }
 
     // [START on_activity_result]
