@@ -1,9 +1,27 @@
 package com.flamevision.findiro.Profile;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.flamevision.findiro.R;
+import com.flamevision.findiro.UserAndGroup.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,21 +37,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+public class Fragment_EditProfile extends Fragment {
 
-public class EditProfile_activity extends AppCompatActivity {
-    //very useful tutorial about Glide in github
-    //https://github.com/bumptech/glide
     private FirebaseUser user;
     private FirebaseDatabase database;
     private FirebaseAuth mAuth;
@@ -46,42 +51,40 @@ public class EditProfile_activity extends AppCompatActivity {
     private ImageView ivPicture;
     private Button changeName;
 
-    @Override
-    protected void onStart()
+    public Fragment_EditProfile() {
+        // Required empty public constructor
+
+    }
+    public void onStart()
     {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile_activity);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment__edit_profile, container, false);
 
-        username = findViewById(R.id.etName);
-        email = findViewById(R.id.etEmail);
-        uploadPic = findViewById(R.id.btnUpload);
-        changeName=findViewById(R.id.EditName);
-        mAuth=FirebaseAuth.getInstance();
+        username = view.findViewById(R.id.etName);
+        email = view.findViewById(R.id.etEmail);
+        uploadPic = view.findViewById(R.id.EditProfile);
+        changeName = view.findViewById(R.id.EditName);
+        mAuth = FirebaseAuth.getInstance();
 
         changeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String users=username.getText().toString();
+                String users = username.getText().toString();
                 ChangeName(users);
-                Toast.makeText(EditProfile_activity.this, "name updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "name updated..", Toast.LENGTH_SHORT).show();
             }
         });
 
-        mAuthListener=new FirebaseAuth.AuthStateListener()
-        {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
-            {
-                FirebaseUser user=firebaseAuth.getCurrentUser();
-                if(user!=null)
-                {
-
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
                     getUserName();
                     email.setText(user.getEmail());
                 }
@@ -96,7 +99,10 @@ public class EditProfile_activity extends AppCompatActivity {
                 startActivityForResult(gallery, REQUESTCODE_GET_PICTURE);
             }
         });
+
+        return view;
     }
+
     private void getUserName()
     {
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -116,7 +122,7 @@ public class EditProfile_activity extends AppCompatActivity {
             }
         });
     }
-    public void setUserEmailAddress(View view) {
+    private void setUserEmailAddress(View view) {
         String newEmail = email.getText().toString();
         if (TextUtils.isEmpty(newEmail))
             return;
@@ -126,7 +132,7 @@ public class EditProfile_activity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
-                    Toast.makeText(EditProfile_activity.this, "email updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "email updated", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -146,23 +152,22 @@ public class EditProfile_activity extends AppCompatActivity {
                     String pictureUrl = picRef.getPath();
                     curUserRef.child("picture").setValue(pictureUrl);
                     Log.d("Sign up", "Picture has been uploaded to storage");
-                    setResult(RESULT_OK);
-                    finish();
+                    //setResult(RESULT_OK);
+                    //finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("Sign up", "Picture failed to upload to storage");
-                    setResult(RESULT_OK);
-                    finish();
+                    //setResult(RESULT_OK);
+                   // finish();
                 }
             });
         } else {
-            setResult(RESULT_OK);
-            finish();
+            //setResult(RESULT_OK);
+            //finish();
         }
     }
-
     public void ChangeName(String users)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

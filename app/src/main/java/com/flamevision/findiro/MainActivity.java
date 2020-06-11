@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flamevision.findiro.Profile.EditProfile_activity;
+import com.flamevision.findiro.Profile.Fragment_EditProfile;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
 import com.flamevision.findiro.UserAndGroup.CreateGroupFragment;
@@ -191,8 +192,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.id.nav_update:
                 //open profile
-                intent = new Intent(MainActivity.this, EditProfile_activity.class);
-                startActivity(intent);
+                //intent = new Intent(MainActivity.this, EditProfile_activity.class);
+                //startActivity(intent);
+                fragment = new Fragment_EditProfile();
+                title.setText(R.string.update_profile);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth auth = FirebaseAuth.getInstance();

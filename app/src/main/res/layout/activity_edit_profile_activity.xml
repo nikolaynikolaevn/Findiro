@@ -46,9 +46,9 @@ tools:context=".Profile.EditProfile_activity">
         android:layout_marginLeft="96dp"
         android:layout_marginEnd="110dp"
         android:layout_marginRight="110dp"
-        android:layout_marginBottom="112dp"
+        android:layout_marginBottom="109dp"
         android:background="@drawable/bg_ui"
-        android:text="Upload Photo" />
+        android:text="Change picture" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@ tools:context=".Profile.EditProfile_activity">
             android:text="User Name" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -78,7 +78,7 @@ tools:context=".Profile.EditProfile_activity">
             android:text="Email" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -86,20 +86,11 @@ tools:context=".Profile.EditProfile_activity">
             android:text=".." />
 
         <Button
-            android:id="@+id/btnSave"
+            android:id="@+id/EditName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_ui"
-            android:onClick="updateUserProfile"
-            android:text="Change name" />
-
-        <Button
-            android:id="@+id/btnChanged"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_ui"
-            android:onClick="setUserEmailAddress"
-            android:text="Change Email" />
+            android:text="Change Name" />
 
     </LinearLayout>
 
