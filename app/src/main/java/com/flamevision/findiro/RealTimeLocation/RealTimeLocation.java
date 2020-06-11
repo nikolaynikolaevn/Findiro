@@ -1,5 +1,7 @@
 package com.flamevision.findiro.RealTimeLocation;
 
+import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -24,7 +26,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class RealTimeLocation implements UserReference.UserReferenceUpdate {
+interface IUpdateGroupsReference{
+    void onUserGroupsReceived();
+}
+
+public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpdateGroupsReference {
+
+    private final Activity activity;
     private UserReference currentUserReference;
     private GoogleMap googleMap;
     private DatabaseReference updateLocationReference;
@@ -89,6 +97,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
             Log.e("Show all groups", "Total groups: " + snapshot.getChildrenCount());
+            groups.clear();
             for (DataSnapshot groupSnapShot : snapshot.getChildren()) {
                 Group group = new GroupReference(groupSnapShot.getKey(), null);
                 for (String g : userGroups) {
@@ -111,9 +120,11 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
         public void onDataChange(DataSnapshot snapshot) {
             Log.e("Show user groups", "Total groups: " + snapshot.getChildrenCount());
             // Add users groups to a list
+            userGroups.clear();
             for (DataSnapshot groupSnapShot : snapshot.getChildren()) {
                 String group = groupSnapShot.getValue(String.class);
                 userGroups.add(group);
+                onUserGroupsReceived(); // Create the actual group reference
             }
         }
 
@@ -123,25 +134,28 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
         }
     };
 
-    public void onMapReady(GoogleMap googleMap) {
+    public RealTimeLocation(Context context) {
+        this.activity = (Activity) context;
+    }
+
+    public void mapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
     }
 
-    public void onLogin(String userId) {
-        this.currentUserReference = new UserReference(userId, this, false);
-        this.updateLocationReference = FirebaseDatabase.getInstance().getReference("Users/").child(userId).child("location");
+    public void login(UserReference currentUserReference) {
+        this.currentUserReference = currentUserReference;
+        this.updateLocationReference = FirebaseDatabase.getInstance().getReference("Users/").child(currentUserReference.getUserId()).child("location");
 
-        this.userGroupsReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("groups");
+        this.userGroupsReference = FirebaseDatabase.getInstance().getReference("Users").child(currentUserReference.getUserId()).child("groups");
         this.userGroupsReference.addListenerForSingleValueEvent(userGroupsValueListener);
 
-        this.groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
-        this.groupsRef.addListenerForSingleValueEvent(groupValueListener);
+        // Groups reference will be set after we get the groups the user is part of
     }
 
     /**
      * Remove all data
      */
-    public void onLogout() {
+    public void logout() {
         this.groupMemberReference = null;
         this.updateLocationReference = null;
         this.currentUserReference = null;
@@ -178,6 +192,9 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
     }
 
     public void groupSelected(Group group) {
+
+        // Close the SelectGroupFragment
+        activity.onBackPressed();
 
         clearListeners();
 
@@ -229,7 +246,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
         }
     }
 
-    public void onLocationChanged(Location location) {
+    public void locationChanged(Location location) {
         if (currentUserReference != null) { // If null user is logged out
             updateLocationReference.child("long").setValue(location.getLongitude());
             updateLocationReference.child("lat").setValue(location.getLatitude());
@@ -242,5 +259,11 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate {
                 .title(newUser.getName())
                 .icon(BitmapDescriptorFactory.defaultMarker(new Random().nextInt(360))));
         uidMarkerHashMap.put(oldUser.getUserId(), marker);
+    }
+
+    @Override
+    public void onUserGroupsReceived() {
+        this.groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
+        this.groupsRef.addListenerForSingleValueEvent(groupValueListener);
     }
 }
