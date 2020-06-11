@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        realTimeLocation = new RealTimeLocation();
+        realTimeLocation = new RealTimeLocation(this);
 
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gm = googleMap;
-        realTimeLocation.onMapReady(googleMap);
+        realTimeLocation.mapReady(googleMap);
 
         Location location = null;
 
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (m != null) {
             m.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             gm.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
-            realTimeLocation.onLocationChanged(location);
+            realTimeLocation.locationChanged(location);
         }
     }
 
