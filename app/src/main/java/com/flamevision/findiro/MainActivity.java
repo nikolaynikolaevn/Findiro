@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //set user values in nav header
              curUserReference = new UserReference(firebaseUser.getUid(), null, true);
+             realTimeLocation.login(curUserReference);
         }
 
         selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title.setText(R.string.update_profile);
                 break;
             case R.id.nav_logout:
+                realTimeLocation.logout();
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 if(auth.getCurrentUser() != null){
                     DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + auth.getCurrentUser().getUid() + "/online");
