@@ -27,7 +27,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.flamevision.findiro.Profile.EditProfile_activity;
 import com.flamevision.findiro.Profile.Fragment_EditProfile;
 import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
