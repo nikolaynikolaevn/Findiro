@@ -288,19 +288,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == USER_LOGIN_CODE) {
-            if (resultCode == R.integer.LoggedIn) {
-                userId = data.getStringExtra("userId");
-                realTimeLocation.onLogin(userId);
-            } else if (resultCode == R.integer.LoggedOut) {
-                realTimeLocation.onLogout();
-            }
-        }
-    }
-
-    @Override
     public void GroupSelected(Group group) {
         realTimeLocation.groupSelected(group);
         getSupportFragmentManager().beginTransaction().remove(selectGroupFragment).commit();
