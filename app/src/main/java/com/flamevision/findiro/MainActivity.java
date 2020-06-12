@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         navView.setNavigationItemSelectedListener(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
 
         realTimeLocation = new RealTimeLocation(this);
 
@@ -149,31 +148,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, this);
 
+
+
+        selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
+    }
+
+    @Override
+    protected void onStart() {
+        firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/online");
             curUserOnlineRef.setValue(true);
             curUserOnlineRef.onDisconnect().setValue(false);
 
-//            loggedInUser = realTimeLocation.getCurrentUserReference();
-//
-//            navLoggedInName = findViewById(R.id.nav_name);
-//            navLoggedInName.setText(loggedInUser.getName());
-//
-//            navLoggedInEmail = findViewById(R.id.nav_email);
-//            navLoggedInEmail.setText(loggedInUser.getUserId());
-
-//            navLoggedInName = findViewById(R.id.nav_name);
-//            navLoggedInName.setText(firebaseUser.getDisplayName());
-//
-//            navLoggedInEmail = findViewById(R.id.nav_email);
-//            navLoggedInEmail.setText(firebaseUser.getEmail());
-
             //set user values in nav header
-             curUserReference = new UserReference(firebaseUser.getUid(), null, true);
-             realTimeLocation.login(curUserReference);
+            curUserReference = new UserReference(firebaseUser.getUid(), null, true);
+            realTimeLocation.login(curUserReference);
         }
-
-        selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
+        super.onStart();
     }
 
     @Override
