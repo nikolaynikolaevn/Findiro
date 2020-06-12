@@ -21,6 +21,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -124,7 +125,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         navHeaderImage.setImageDrawable(defaultPic);
                     }
                     else {
-                        navHeaderImage.setImageBitmap(curUserReference.getPicture());
+                        Bitmap curPic = curUserReference.getPicture();
+                        int maxAllowed = 100;
+                        int maxSize = Math.max(curPic.getWidth(), curPic.getHeight());
+                        int div = maxSize/maxAllowed;
+                        Bitmap smallPic = Bitmap.createScaledBitmap(curPic, curPic.getWidth()/div, curPic.getHeight()/div, true);
+                        navHeaderImage.setImageBitmap(smallPic);
+                        //navHeaderImage.setImageBitmap(curUserReference.getPicture());
                     }
                     navHeaderMail.setText(firebaseUser.getEmail());
                 }

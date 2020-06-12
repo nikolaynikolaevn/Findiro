@@ -214,9 +214,11 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         if(oldGroup.members.size() != newGroup.members.size()) {
             if(newGroup.members.size() == 0){
                 //group has been deleted
-                Toast.makeText(getContext(), "Group has been deleted", Toast.LENGTH_SHORT).show();
-                showEmptyFragment();
-                getActivity().onBackPressed();
+                if(getContext() != null) {
+                    Toast.makeText(getContext(), "Group has been deleted", Toast.LENGTH_SHORT).show();
+                    showEmptyFragment();
+                    getActivity().onBackPressed();
+                }
                 return;
             }
             //Add new members
