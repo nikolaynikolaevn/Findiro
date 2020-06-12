@@ -118,6 +118,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                     navHeaderMail.setText(firebaseUser.getEmail());
                 }
+                else{
+                    if(firebaseUser != null){
+                        navHeaderName.setText("FB user known");
+                        curUserReference = new UserReference(firebaseUser.getUid(), null, true);
+                    }
+                    else {
+                        navHeaderName.setText("FB user unknown");
+                    }
+                }
 
                 super.onDrawerOpened(drawerView);
             }
