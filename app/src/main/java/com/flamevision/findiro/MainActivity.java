@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
@@ -21,7 +26,9 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +39,7 @@ import com.flamevision.findiro.RealTimeLocation.RealTimeLocation;
 import com.flamevision.findiro.UserAndGroup.AllGroupsFragment;
 import com.flamevision.findiro.UserAndGroup.CreateGroupFragment;
 import com.flamevision.findiro.UserAndGroup.Group;
+import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.flamevision.findiro.UserAndGroup.SelectGroupFragment;
 import com.flamevision.findiro.UserAndGroup.UserReference;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,7 +57,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver, NavigationView.OnNavigationItemSelectedListener  {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, SelectGroupFragment.GroupReceiver, NavigationView.OnNavigationItemSelectedListener, RealTimeLocation.UserRange  {
 
     private final int USER_LOGIN_CODE = 1;
 
@@ -140,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         firebaseAuth = FirebaseAuth.getInstance();
 
         realTimeLocation = new RealTimeLocation(this);
+        realTimeLocation.AddListener(this);
 
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -151,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         selectGroupFragment = new SelectGroupFragment(MainActivity.this, realTimeLocation.getGroups());
+        notificationManager = (NotificationManager)getSystemService(Service.NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -294,5 +306,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void GroupSelected(Group group) {
         realTimeLocation.groupSelected(group);
         getSupportFragmentManager().beginTransaction().remove(selectGroupFragment).commit();
+    }
+
+    NotificationManager notificationManager;
+    public void showNotification(String title, String content, int id){
+
+        //SETTING MANAGER AND CHANNEL
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel nc = new NotificationChannel("abc", "Findiro distance", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(nc);
+        }
+
+        //SETTING NOTIFICATION SETTINGS
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "abc");
+        builder.setSmallIcon(R.mipmap.ic_launcher_round);
+        builder.setContentTitle(title);
+        builder.setContentText(content);
+        builder.setAutoCancel(true);
+
+        //BUILDING AND SENDING NOTIFICATION
+        Notification notification = null;
+        notification = builder.build();
+        notificationManager.notify(id, notification);
+
+    }
+
+    @Override
+    public void UsersInRangeChanged(@NonNull List<UserReference> usersInRange) {
+        int notificationId = 9999;
+        String title = "Findiro users nearby";
+        String content = "";
+        if(usersInRange.size() == 0){ notificationManager.cancel(notificationId);return;}
+        if(usersInRange.size() == 1){content = usersInRange.get(0).getName();}
+        else {
+            for(int i = 0; i < usersInRange.size(); i++){
+                if(i == usersInRange.size() - 1){
+                    content += " and " + usersInRange.get(i).getName();
+                }
+                else {
+                    if(i != 0){content += ", ";}
+                    content += usersInRange.get(i).getName();
+                }
+            }
+        }
+        showNotification(title, content, notificationId);
+        Log.e("USER NEARBY", title + " ||| " + content);
     }
 }
