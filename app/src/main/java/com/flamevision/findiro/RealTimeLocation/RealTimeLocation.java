@@ -55,6 +55,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
     private HashMap<String, Marker> uidMarkerHashMap = new HashMap<>();
 
     private DatabaseReference userGroupsReference;
+    private Group currentGroup;
 
     public UserReference getCurrentUserReference() {
         return currentUserReference;
@@ -204,6 +205,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
 
     public void groupSelected(Group group) {
 
+        this.currentGroup = group;
         // Close the SelectGroupFragment
         activity.onBackPressed();
 
@@ -329,5 +331,9 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         loc2.setLatitude(latLng2.latitude);
         loc2.setLongitude(latLng2.longitude);
         return loc1.distanceTo(loc2) <= maxDistance;
+    }
+
+    public Group getCurrentGroup() {
+        return currentGroup;
     }
 }

@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     SupportMapFragment mf;
 
     private UserReference curUserReference = null;
+    private String currentGroupName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,15 +113,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, 0, 0
-        ){
+        ) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 ImageView navHeaderImage = findViewById(R.id.nav_image);
                 TextView navHeaderMail = findViewById(R.id.nav_email);
                 TextView navHeaderName = findViewById(R.id.nav_name);
-                if(curUserReference != null) {
+                TextView navCurrentGroup = findViewById(R.id.nav_group);
+
+                if (curUserReference != null) {
                     navHeaderName.setText(curUserReference.getName());
-                    if(curUserReference.getPicture() == null){
+                    if (curUserReference.getPicture() == null) {
                         Drawable defaultPic = getResources().getDrawable(R.drawable.ic_user);
                         navHeaderImage.setImageDrawable(defaultPic);
                     }
@@ -133,7 +136,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         navHeaderImage.setImageBitmap(smallPic);
                         //navHeaderImage.setImageBitmap(curUserReference.getPicture());
                     }
+
                     navHeaderMail.setText(firebaseUser.getEmail());
+
+                    if (currentGroupName != null) {
+                        navCurrentGroup.setText(currentGroupName);
+                    }
                 }
                 else{
                     if(firebaseUser != null){
@@ -220,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.nav_logout:
                 realTimeLocation.logout();
                 FirebaseAuth auth = FirebaseAuth.getInstance();
-                if(auth.getCurrentUser() != null){
+                if (auth.getCurrentUser() != null) {
                     DatabaseReference curUserOnlineRef = FirebaseDatabase.getInstance().getReference("Users/" + auth.getCurrentUser().getUid() + "/online");
                     curUserOnlineRef.setValue(false);
                     curUserOnlineRef.onDisconnect().cancel();
@@ -235,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title.setText(getString(R.string.home));
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             getSupportFragmentManager().popBackStack("first", 0);
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
@@ -312,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void GroupSelected(Group group) {
         realTimeLocation.groupSelected(group);
+        currentGroupName = realTimeLocation.getCurrentGroup().getName();
         getSupportFragmentManager().beginTransaction().remove(selectGroupFragment).commit();
     }
 

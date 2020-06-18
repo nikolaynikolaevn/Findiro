@@ -32,4 +32,11 @@
         android:text="@string/email"
         android:textColor="#FFFFFF" />
 
+    <TextView
+        android:id="@+id/nav_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No group selected"
+        android:textColor="#FFFFFF" />
+
 </LinearLayout>
