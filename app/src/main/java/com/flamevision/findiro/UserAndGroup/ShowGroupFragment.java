@@ -1,5 +1,7 @@
 package com.flamevision.findiro.UserAndGroup;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -119,9 +121,26 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         btnMultiFunc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!((GroupReference) group).DeleteGroup()){
-                    Toast.makeText(getContext(), "Deleting group failed", Toast.LENGTH_SHORT).show();
-                }
+                //ask user if he is sure about deleting the group
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setTitle("Delete group");
+                alertDialog.setMessage("Are you sure you want to delete this group? This can not be undone!");
+                alertDialog.setPositiveButton("Delete group", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(!((GroupReference) group).DeleteGroup()){
+                            Toast.makeText(getContext(), "Deleting group failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Do nothing...
+                    }
+                });
+                alertDialog.create();
+                alertDialog.show();
             }
         });
     }
@@ -156,48 +175,65 @@ public class ShowGroupFragment extends Fragment implements SelectUserFragment.Us
         btnMultiFunc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DatabaseReference groupRef = ((GroupReference)group).getGroupRef().child("members");
-
-                groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                //ask user if he is sure about leaving the group
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setTitle("Leave group");
+                alertDialog.setMessage("Are you sure you want to leave this group?");
+                alertDialog.setPositiveButton("Leave group", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot child: dataSnapshot.getChildren()){
-                            if(child.getValue() != null){
-                                if(firebaseUser.getUid().equals(child.getValue().toString())) {
-                                    DatabaseReference memberRef = FirebaseDatabase.getInstance().getReference("Groups/" + group.groupId + "/members/" + child.getKey());
-                                    memberRef.removeValue();
+                    public void onClick(DialogInterface dialog, int which) {
+                        final DatabaseReference groupRef = ((GroupReference)group).getGroupRef().child("members");
+
+                        groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot child: dataSnapshot.getChildren()){
+                                    if(child.getValue() != null){
+                                        if(firebaseUser.getUid().equals(child.getValue().toString())) {
+                                            DatabaseReference memberRef = FirebaseDatabase.getInstance().getReference("Groups/" + group.groupId + "/members/" + child.getKey());
+                                            memberRef.removeValue();
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
-
-                DatabaseReference curUserGroupsRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/groups");
-                curUserGroupsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot child: dataSnapshot.getChildren()){
-                            if(child.getValue() != null){
-                                if(child.getValue().toString() == group.groupId);
-                                DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/groups/" + child.getKey());
-                                groupRef.removeValue();
                             }
-                        }
-                    }
+                        });
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        DatabaseReference curUserGroupsRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/groups");
+                        curUserGroupsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot child: dataSnapshot.getChildren()){
+                                    if(child.getValue() != null){
+                                        if(child.getValue().toString() == group.groupId);
+                                        DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid() + "/groups/" + child.getKey());
+                                        groupRef.removeValue();
+                                    }
+                                }
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        //show join button
+                        showJoinButton();
                     }
                 });
-
-                //show join button
-                showJoinButton();
+                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do nothing
+                    }
+                });
+                alertDialog.create();
+                alertDialog.show();
             }
         });
     }
