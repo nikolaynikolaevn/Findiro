@@ -1,7 +1,6 @@
 package com.flamevision.findiro;
 
 
-import android.provider.Telephony;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -33,7 +32,7 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class EditProfileTest {
+public class NewTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
@@ -45,8 +44,15 @@ public class EditProfileTest {
                     "android.permission.ACCESS_COARSE_LOCATION");
 
     @Test
-    public void editProfileTest() {
-        ViewInteraction appCompatEditText = onView(withId(R.id.EmailValue));
+    public void newTest() {
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.EmailValue),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.RelativeLayout")),
+                                        1),
+                                1),
+                        isDisplayed()));
         appCompatEditText.perform(replaceText("test123@gmail.com"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
@@ -79,6 +85,26 @@ public class EditProfileTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
+        ViewInteraction appCompatImageButton2 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.toolbar),
+                                childAtPosition(
+                                        withClassName(is("com.google.android.material.appbar.AppBarLayout")),
+                                        0)),
+                        2),
+                        isDisplayed()));
+        appCompatImageButton2.perform(click());
+
+        ViewInteraction appCompatImageButton3 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.toolbar),
+                                childAtPosition(
+                                        withClassName(is("com.google.android.material.appbar.AppBarLayout")),
+                                        0)),
+                        2),
+                        isDisplayed()));
+        appCompatImageButton3.perform(click());
+
         ViewInteraction navigationMenuItemView = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.design_navigation_view),
@@ -90,44 +116,15 @@ public class EditProfileTest {
         navigationMenuItemView.perform(click());
 
         ViewInteraction editText = onView(
-                allOf(withId(R.id.etName), withText("Theo"),
+                allOf(withId(R.id.etName), withText("hello"),
                         childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.FragmentRelative),
-                                        3),
+                                allOf(withId(R.id.LinearFragment),
+                                        childAtPosition(
+                                                withId(R.id.FragmentRelative),
+                                                3)),
                                 1),
                         isDisplayed()));
-        editText.check(matches(withText("Theo123")));
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.etName), withText("Theo"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.FragmentRelative),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText3.perform(replaceText("Theo123"));
-
-        ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.etName), withText("Theo123"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.FragmentRelative),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText4.perform(closeSoftKeyboard());
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.EditName), withText("Change Name"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.FragmentRelative),
-                                        0),
-                                4),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
+        editText.check(matches(withText("hello")));
     }
 
     private static Matcher<View> childAtPosition(
