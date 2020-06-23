@@ -237,6 +237,15 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
             return;
         }
 
+        // Do not display marker for offline users
+        if(!newUser.getOnline()){
+            Marker marker = uidMarkerHashMap.get(newUser.getUserId());
+            if(marker != null){
+                marker.remove();
+            }
+            return;
+        }
+
         // If no location data is present do nothing
         if (newUser.getLongitude() == null || newUser.getLatitude() == null) {
             return;
