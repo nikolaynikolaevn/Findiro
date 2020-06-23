@@ -159,7 +159,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         this.updateLocationReference = FirebaseDatabase.getInstance().getReference("Users/").child(currentUserReference.getUserId()).child("location");
 
         this.userGroupsReference = FirebaseDatabase.getInstance().getReference("Users").child(currentUserReference.getUserId()).child("groups");
-        this.userGroupsReference.addListenerForSingleValueEvent(userGroupsValueListener);
+        this.userGroupsReference.addValueEventListener(userGroupsValueListener);
 
         // Groups reference will be set after we get the groups the user is part of
     }
@@ -293,7 +293,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
     @Override
     public void onUserGroupsReceived() {
         this.groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
-        this.groupsRef.addListenerForSingleValueEvent(groupValueListener);
+        this.groupsRef.addValueEventListener(groupValueListener);
     }
 
 
