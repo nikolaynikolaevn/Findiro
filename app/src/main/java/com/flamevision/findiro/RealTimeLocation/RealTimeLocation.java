@@ -238,10 +238,11 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         }
 
         // Do not display marker for offline users
+        Marker marker = uidMarkerHashMap.get(newUser.getUserId());
         if(!newUser.getOnline()){
-            Marker marker = uidMarkerHashMap.get(newUser.getUserId());
             if(marker != null){
                 marker.remove();
+                uidMarkerHashMap.put(newUser.getUserId(), null); // Remove the marker from the HashMap
             }
             return;
         }
@@ -259,15 +260,20 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         if (oldUser.getLongitude() == null && oldUser.getLatitude() == null) {
             // And the marker in HashMap is null add a marker
             if (uidMarkerHashMap.get(oldUser.getUserId()) == null) {
-                addMarker(oldUser, newUser);
+                addMarker(newUser);
                 return;
             }
+        }
+
+        if (oldUser.getLongitude() != null && oldUser.getLatitude() != null && marker == null){
+            addMarker(newUser);
+            return;
         }
 
         // There is a marker already
         // If the new data is different from the old data, update the marker location
         if (!oldUser.getLatitude().equals(newUser.getLatitude()) || !oldUser.getLongitude().equals(newUser.getLongitude())) {
-            Marker marker = uidMarkerHashMap.get(oldUser.getUserId());
+            marker = uidMarkerHashMap.get(oldUser.getUserId());
             marker.setPosition(new LatLng(newUser.getLatitude(), newUser.getLongitude()));
         }
     }
@@ -282,12 +288,12 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         }
     }
 
-    private void addMarker(User oldUser, UserReference newUser) {
+    private void addMarker(UserReference newUser) {
         Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(newUser.getLatitude(), newUser.getLongitude()))
                 .title(newUser.getName())
                 .icon(BitmapDescriptorFactory.defaultMarker(new Random().nextInt(360))));
-        uidMarkerHashMap.put(oldUser.getUserId(), marker);
+        uidMarkerHashMap.put(newUser.getUserId(), marker);
     }
 
     @Override
