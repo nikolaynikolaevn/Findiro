@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken accessToken) {
-        Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
+        //Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         firebaseAuth.signInWithCredential(credential)
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            //Log.d(TAG, "signInWithCredential:success");
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
-        Log.d("Login", "Entered email: " + email + ", pass: " + pass);
+        //Log.d("Login", "Entered email: " + email + ", pass: " + pass);
 
         boolean error = false;
         if (email.equalsIgnoreCase("")) {
@@ -132,24 +132,24 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(error){
-            Log.d("Login", "EditText error occurred");
+            //Log.d("Login", "EditText error occurred");
             Toast.makeText(LoginActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
         }
         else  {
-            Log.d("Login", "Trying to login");
+            //Log.d("Login", "Trying to login");
             firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         //login success
-                        Log.d("Login", "Login success");
+                        //Log.d("Login", "Login success");
                         setResult(RESULT_OK);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
                     else {
                         //login failed
-                        Log.d("Login", "Login failed due to exception: " + task.getException());
+                        //Log.d("Login", "Login failed due to exception: " + task.getException());
                         if(task.getException() instanceof FirebaseAuthInvalidUserException){
                             //Email does not exists, show sign up screen
                             etEmail.setError("No account exists with this email.");

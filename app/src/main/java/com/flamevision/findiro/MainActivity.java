@@ -366,6 +366,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         showNotification(title, content, notificationId);
-        Log.e("USER NEARBY", title + " ||| " + content);
+        //Log.e("USER NEARBY", title + " ||| " + content);
     }
 }

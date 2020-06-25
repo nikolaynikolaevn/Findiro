@@ -92,7 +92,7 @@ public class CustomSignupActivity extends AppCompatActivity {
         String pass = etPass.getText().toString().trim();
         final String name = etName.getText().toString().trim();
 
-        Log.d("Sign up", "Entered email: " + email + ", pass: " + pass);
+        //Log.d("Sign up", "Entered email: " + email + ", pass: " + pass);
 
         boolean error = false;
         if (email.equalsIgnoreCase("")) {
@@ -108,7 +108,7 @@ public class CustomSignupActivity extends AppCompatActivity {
             error = true;
         }
         if(error){
-            Log.d("Sign up", "EditText error occurred");
+            //Log.d("Sign up", "EditText error occurred");
             Toast.makeText(this, "Sign up failed", Toast.LENGTH_SHORT).show();
         }
         else  {
@@ -117,26 +117,26 @@ public class CustomSignupActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Log.d("Sign up", "Sign up success, now updating database");
+                        //Log.d("Sign up", "Sign up success, now updating database");
                         //sign up success, now create user data in the database
                         updateDatabase(name);
-                        Log.d("Sign up", "Database updated with new user");
+                        //Log.d("Sign up", "Database updated with new user");
                     } else {
                         //sign up failed
-                        Log.d("Sign up", "Sign up failed due to exception: " + task.getException());
+                        //Log.d("Sign up", "Sign up failed due to exception: " + task.getException());
                         if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
                             //password is too weak
-                            Log.d("Sign up", "Sign up failed because of weak password");
+                            //Log.d("Sign up", "Sign up failed because of weak password");
                             etPass.setError("Your password is too weak");
                         }
                         else if(task.getException() instanceof FirebaseAuthInvalidCredentialsException){
                             //email is malformed
-                            Log.d("Sign up", "Sign up failed because of malformed email");
+                            //Log.d("Sign up", "Sign up failed because of malformed email");
                             etEmail.setError("Your email is malformed");
                         }
                         else if(task.getException() instanceof FirebaseAuthUserCollisionException){
                             //email exists
-                            Log.d("Sign up", "Sign up failed because of used email");
+                            //Log.d("Sign up", "Sign up failed because of used email");
                             etEmail.setError("This email is already used");
                         }
                         Toast.makeText(CustomSignupActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
@@ -160,14 +160,14 @@ public class CustomSignupActivity extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     String pictureUrl = picRef.getPath();
                     curUserRef.child("picture").setValue(pictureUrl);
-                    Log.d("Sign up", "Picture has been uploaded to storage");
+                    //Log.d("Sign up", "Picture has been uploaded to storage");
                     setResult(RESULT_OK);
                     goToMain();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("Sign up", "Picture failed to upload to storage");
+                    //Log.d("Sign up", "Picture failed to upload to storage");
                     setResult(RESULT_OK);
                     goToMain();
                 }

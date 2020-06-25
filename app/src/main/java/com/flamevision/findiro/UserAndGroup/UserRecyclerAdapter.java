@@ -47,7 +47,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
                 @Override
                 public void onClick(View v) {
                     if(user != null){
-                        Log.e(log, "User has been selected: " + user.name);
+                        //Log.e(log, "User has been selected: " + user.name);
                         if(userReceiver != null){
                             userReceiver.UserSelected(user);
                         }
@@ -58,7 +58,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
         public void setUser(User user){
             if(user != null){
-                Log.e(log, "User has been set: " + user.name);
+                //Log.e(log, "User has been set: " + user.name);
                 this.user = user;
                 if(user instanceof UserReference){
                     ((UserReference) user).AddListener(this);
@@ -119,7 +119,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         this.users = users;
         this.context = context;
         this.userReceiver = userReceiver;
-        Log.e(log, "RecyclerAdapter created\n" + toString());
+        //Log.e(log, "RecyclerAdapter created\n" + toString());
     }
 
     @NonNull

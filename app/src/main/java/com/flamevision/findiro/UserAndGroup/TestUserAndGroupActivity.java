@@ -73,7 +73,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
     private ValueEventListener groupValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
-            Log.e("Show all groups" ,"Total groups: "+snapshot.getChildrenCount());
+            //Log.e("Show all groups" ,"Total groups: "+snapshot.getChildrenCount());
             for (DataSnapshot groupSnapShot: snapshot.getChildren()) {
                 Group group = new GroupReference(groupSnapShot.getKey(), null);
                     /*
@@ -98,7 +98,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
         }
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("Firebase error", databaseError.getMessage());
+            //Log.e("Firebase error", databaseError.getMessage());
         }
     };
     private void showAllGroups(){
@@ -109,18 +109,18 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
     private ValueEventListener userValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
-            Log.e("Show all users " ,"Total users: "+snapshot.getChildrenCount());
+            //Log.e("Show all users " ,"Total users: "+snapshot.getChildrenCount());
             for (DataSnapshot userSnapShot: snapshot.getChildren()) {
                 if(true){
                     String userUid = userSnapShot.getKey().toString();
-                    Log.e("Show all users " ,"UserUid: "+ userUid);
+                    //Log.e("Show all users " ,"UserUid: "+ userUid);
                     User user = new UserReference(userUid, null, true);
                     users.add(user);
                 }
                 else { //OLD WAY
                     String name = userSnapShot.child("name").getValue().toString();
                     String userId = userSnapShot.getKey().toString();
-                    Log.e("Show all users " ,"UserName: "+ name);
+                    //Log.e("Show all users " ,"UserName: "+ name);
                     User user = new User(userId, name, null, new Double(0), new Double(0), null, null, null);
                     users.add(user);
                 }
@@ -129,7 +129,7 @@ public class TestUserAndGroupActivity extends AppCompatActivity implements Selec
         }
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("Firebase error", databaseError.getMessage());
+            //Log.e("Firebase error", databaseError.getMessage());
         }
     };
     private void showAllUsers(){

@@ -37,7 +37,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
                 @Override
                 public void onClick(View v) {
                     if(group != null){
-                        Log.e(log, "Group has been selected: " + group.name);
+                        //Log.e(log, "Group has been selected: " + group.name);
                         if(groupReceiver != null){
                             groupReceiver.GroupSelected(group);
                         }
@@ -48,7 +48,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
 
         public void setGroup(Group group){
             if(group != null){
-                Log.e(log, "Group has been set: " + group.name);
+                //Log.e(log, "Group has been set: " + group.name);
                 this.group = group;
                 tvName.setText("Loading name...");
                 tvMembers.setText("Loading members...");
@@ -106,7 +106,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         this.groups = groups;
         this.context = context;
         this.groupReceiver = groupReceiver;
-        Log.e(log, "RecyclerAdapter created\n" + toString());
+        //Log.e(log, "RecyclerAdapter created\n" + toString());
     }
 
     @NonNull

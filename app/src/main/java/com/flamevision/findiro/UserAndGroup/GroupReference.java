@@ -59,7 +59,7 @@ public class GroupReference extends Group {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 updateErrorOccurred = true;
-                Log.e(log, "Database error occurred: " + databaseError.getMessage());
+                //Log.e(log, "Database error occurred: " + databaseError.getMessage());
             }
         });
     }
@@ -142,7 +142,7 @@ public class GroupReference extends Group {
     }
 
     private void printGroup(){
-        Log.e(log, toString());
+        //Log.e(log, toString());
     }
 
     public String getGroupId() {

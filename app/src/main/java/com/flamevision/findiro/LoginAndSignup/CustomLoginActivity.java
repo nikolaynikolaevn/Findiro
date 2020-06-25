@@ -66,20 +66,20 @@ public class CustomLoginActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                //Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
                 // App code
             }
             @Override
             public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
+                //Log.d(TAG, "facebook:onCancel");
                 // [START_EXCLUDE]
                 //updateUI(null);
                 // [END_EXCLUDE]
             }
             @Override
             public void onError(FacebookException exception) {
-                Log.d(TAG, "facebook:onError", exception);
+                //Log.d(TAG, "facebook:onError", exception);
                 // [START_EXCLUDE]
                 //updateUI(null);
                 // [END_EXCLUDE]
@@ -107,7 +107,7 @@ public class CustomLoginActivity extends AppCompatActivity {
 
     // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken accessToken) {
-        Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
+        //Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mAuth.signInWithCredential(credential)
@@ -116,7 +116,7 @@ public class CustomLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
                         } else {
@@ -139,7 +139,7 @@ public class CustomLoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
-        Log.d("Login", "Entered email: " + email + ", pass: " + pass);
+        //Log.d("Login", "Entered email: " + email + ", pass: " + pass);
 
         boolean error = false;
         if (email.equalsIgnoreCase("")) {
@@ -152,24 +152,24 @@ public class CustomLoginActivity extends AppCompatActivity {
         }
 
         if(error){
-            Log.d("Login", "EditText error occurred");
+            //Log.d("Login", "EditText error occurred");
             Toast.makeText(this, "Log in failed", Toast.LENGTH_SHORT).show();
         }
         else  {
-            Log.d("Login", "Trying to login");
+            //Log.d("Login", "Trying to login");
             FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         //login success
-                        Log.d("Login", "Login success");
+                        //Log.d("Login", "Login success");
                         setResult(RESULT_OK);
                         finish();
                     }
                     else {
                         //login failed
-                        Log.d("Login", "Login failed due to exception: " + task.getException());
+                        //Log.d("Login", "Login failed due to exception: " + task.getException());
                         if(task.getException() instanceof FirebaseAuthInvalidUserException){
                             //Email does not exists, show sign up screen
                             etEmail.setError("No account exists with this email.");

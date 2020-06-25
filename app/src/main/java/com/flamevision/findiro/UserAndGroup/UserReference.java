@@ -70,7 +70,7 @@ public class UserReference extends User {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 updateErrorOccurred = true;
-                Log.e(log, "Database error occurred: " + databaseError.getMessage());
+                //Log.e(log, "Database error occurred: " + databaseError.getMessage());
             }
         });
     }
@@ -175,7 +175,7 @@ public class UserReference extends User {
     }
 
     private void printUser(){
-        Log.e(log, toString());
+        //Log.e(log, toString());
     }
 
     public String getUserId() {

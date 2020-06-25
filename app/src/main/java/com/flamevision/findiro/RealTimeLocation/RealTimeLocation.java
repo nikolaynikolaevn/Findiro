@@ -109,7 +109,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
     private ValueEventListener groupValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
-            Log.e("Show all groups", "Total groups: " + snapshot.getChildrenCount());
+            //Log.e("Show all groups", "Total groups: " + snapshot.getChildrenCount());
             groups.clear();
             for (DataSnapshot groupSnapShot : snapshot.getChildren()) {
                 Group group = new GroupReference(groupSnapShot.getKey(), null);
@@ -124,14 +124,14 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("Firebase error", databaseError.getMessage());
+            //Log.e("Firebase error", databaseError.getMessage());
         }
     };
 
     private ValueEventListener userGroupsValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
-            Log.e("Show user groups", "Total groups: " + snapshot.getChildrenCount());
+            //Log.e("Show user groups", "Total groups: " + snapshot.getChildrenCount());
             // Add users groups to a list
             userGroups.clear();
             for (DataSnapshot groupSnapShot : snapshot.getChildren()) {
@@ -143,7 +143,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("Firebase error", databaseError.getMessage());
+            //Log.e("Firebase error", databaseError.getMessage());
         }
     };
 
@@ -238,12 +238,12 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
     public void UserValuesUpdated(@NonNull User oldUser, @NonNull UserReference newUser) {
         // If new data is from user on device do nothing
         if (newUser.getUserId().equals(currentUserReference.getUserId())) {
-            Log.e("LocationUpdate", "current user has new location");
+            //Log.e("LocationUpdate", "current user has new location");
             if (newUser.getLongitude() != null && newUser.getLatitude() != null) {
-                Log.e("LocationUpdate", "current user has valid new location");
-                Log.e("LocationUpdate", "checking distance with other users in group: " + users.size());
+                //Log.e("LocationUpdate", "current user has valid new location");
+                //Log.e("LocationUpdate", "checking distance with other users in group: " + users.size());
                 for(UserReference userRef : users){
-                    Log.e("LocationUpdate", "checking distance with user: " + userRef.getName());
+                    //Log.e("LocationUpdate", "checking distance with user: " + userRef.getName());
                     checkDistance(userRef);
                 }
             }

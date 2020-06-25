@@ -114,7 +114,7 @@ public class Fragment_EditProfile extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue().toString();
                 username.setText(name);
-                Log.d("got users NAME", name);
+                //Log.d("got users NAME", name);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -151,14 +151,14 @@ public class Fragment_EditProfile extends Fragment {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     String pictureUrl = picRef.getPath();
                     curUserRef.child("picture").setValue(pictureUrl);
-                    Log.d("Sign up", "Picture has been uploaded to storage");
+                    //Log.d("Sign up", "Picture has been uploaded to storage");
                     //setResult(RESULT_OK);
                     //finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("Sign up", "Picture failed to upload to storage");
+                    //Log.d("Sign up", "Picture failed to upload to storage");
                     //setResult(RESULT_OK);
                    // finish();
                 }
