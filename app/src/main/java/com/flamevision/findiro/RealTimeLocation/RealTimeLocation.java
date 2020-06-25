@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Debug;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -156,6 +157,7 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
 
     public void login(UserReference currentUserReference) {
         this.currentUserReference = currentUserReference;
+        currentUserReference.AddListener(this);
         this.updateLocationReference = FirebaseDatabase.getInstance().getReference("Users/").child(currentUserReference.getUserId()).child("location");
 
         this.userGroupsReference = FirebaseDatabase.getInstance().getReference("Users").child(currentUserReference.getUserId()).child("groups");
@@ -210,6 +212,8 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         activity.onBackPressed();
 
         clearListeners();
+        inRangeUsers.clear();
+        notifyInRangeUserListeners();
 
         for (String userId : group.getMembers()) {
             if (!userId.equals(currentUserReference.getUserId())) { // Do not do anything when the data found is from the current user
@@ -234,6 +238,15 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
     public void UserValuesUpdated(@NonNull User oldUser, @NonNull UserReference newUser) {
         // If new data is from user on device do nothing
         if (newUser.getUserId().equals(currentUserReference.getUserId())) {
+            Log.e("LocationUpdate", "current user has new location");
+            if (newUser.getLongitude() != null && newUser.getLatitude() != null) {
+                Log.e("LocationUpdate", "current user has valid new location");
+                Log.e("LocationUpdate", "checking distance with other users in group: " + users.size());
+                for(UserReference userRef : users){
+                    Log.e("LocationUpdate", "checking distance with user: " + userRef.getName());
+                    checkDistance(userRef);
+                }
+            }
             return;
         }
 
@@ -282,9 +295,6 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         if (currentUserReference != null) { // If null user is logged out
             updateLocationReference.child("long").setValue(location.getLongitude());
             updateLocationReference.child("lat").setValue(location.getLatitude());
-            for(UserReference userReference : users){
-                checkDistance(userReference);
-            }
         }
     }
 
@@ -319,21 +329,21 @@ public class RealTimeLocation implements UserReference.UserReferenceUpdate, IUpd
         if(distance(curPos, otherPos, 10)){ //add user
             if(!inRangeUsers.contains(otherUser)){
                 inRangeUsers.add(otherUser);
-                for(UserRange listener : listeners){
-                    if(listener != null){
-                        listener.UsersInRangeChanged(inRangeUsers);
-                    }
-                }
+                notifyInRangeUserListeners();
             }
         }
         else if(inRangeUsers.contains(otherUser)){ //remove user
             if(!distance(curPos, otherPos, 20)) {
                 inRangeUsers.remove(otherUser);
-                for(UserRange listener : listeners){
-                    if(listener != null){
-                        listener.UsersInRangeChanged(inRangeUsers);
-                    }
-                }
+                notifyInRangeUserListeners();
+            }
+        }
+    }
+
+    private void notifyInRangeUserListeners(){
+        for(UserRange listener : listeners){
+            if(listener != null){
+                listener.UsersInRangeChanged(inRangeUsers);
             }
         }
     }
