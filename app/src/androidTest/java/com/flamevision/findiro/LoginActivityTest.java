@@ -24,6 +24,7 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -47,26 +48,29 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void loginFailedWrongEmail() {
+    public void loginFailedWrongEmail() throws InterruptedException {
         onView(withId(R.id.EmailValue)).perform(typeText("incorrect@email.com"), closeSoftKeyboard());
         onView(withId(R.id.PassValue)).perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.btnSignValue)).perform(click());
+        sleep(1000);
         onView(withId(R.id.EmailValue)).check(matches(withError("No account exists with this email.")));
     }
 
     @Test
-    public void loginFailedWrongPassword() {
+    public void loginFailedWrongPassword() throws InterruptedException {
         onView(withId(R.id.EmailValue)).perform(typeText("test@findiro.com"), closeSoftKeyboard());
         onView(withId(R.id.PassValue)).perform(typeText("findiro1234"), closeSoftKeyboard());
         onView(withId(R.id.btnSignValue)).perform(click());
+        sleep(1000);
         onView(withId(R.id.PassValue)).check(matches(withError("Wrong password.")));
     }
 
     @Test
-    public void loginSuccessfully_shouldShowWelcomeMessage() {
+    public void loginSuccessfully_shouldShowWelcomeMessage() throws InterruptedException {
         onView(withId(R.id.EmailValue)).perform(typeText("test@findiro.com"), closeSoftKeyboard());
         onView(withId(R.id.PassValue)).perform(typeText("findiro123"), closeSoftKeyboard());
         onView(withId(R.id.btnSignValue)).perform(click());
+        sleep(2000);
         onView(withId(R.id.fragment_title)).check(matches(withText("Home")));
     }
 
